@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import imageCompression from "browser-image-compression";
 
 // Shadcn UI components & icons
-import { Button } from "@/components/ui/button"; // Adjust path if your ui components are elsewhere
-import { Loader2 } from "lucide-react"; // For a modern loading indicator
+import { Button } from "@/components/ui/button"; 
+import { Loader2 } from "lucide-react"; 
+import { Input } from "@/components/ui/input"; 
+import { Label } from "@/components/ui/label"; 
+import { saveToLocalStorage, loadFromLocalStorage } from '@/lib/utils'; // Import localStorage utils
 // import loader from "./loader.gif";
 
 // Define the props for the component
@@ -22,8 +25,43 @@ const ConvertAction: React.FC<ConvertActionProps> = ({
   images,
   setConverted,
 }) => {
+  const LOCAL_STORAGE_MAX_SIZE_KEY = 'compressionMaxSizeMB';
+  const LOCAL_STORAGE_MAX_DIMENSION_KEY = 'compressionMaxWidthOrHeight';
+
+  const initialMaxSizeMB = loadFromLocalStorage<number>(LOCAL_STORAGE_MAX_SIZE_KEY);
+  const [maxSizeMB, setMaxSizeMB] = useState<number>(
+    (typeof initialMaxSizeMB === 'number' && initialMaxSizeMB > 0) ? initialMaxSizeMB : 1
+  );
+
+  const initialMaxWidthOrHeight = loadFromLocalStorage<number>(LOCAL_STORAGE_MAX_DIMENSION_KEY);
+  const [maxWidthOrHeight, setMaxWidthOrHeight] = useState<number>(
+    (typeof initialMaxWidthOrHeight === 'number' && initialMaxWidthOrHeight > 0) ? initialMaxWidthOrHeight : 1920
+  );
+
   const [processing, setProcessing] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  const handleMaxSizeChange = (value: string) => {
+    const newSize = parseFloat(value);
+    if (newSize && newSize > 0) {
+      setMaxSizeMB(newSize);
+      saveToLocalStorage<number>(LOCAL_STORAGE_MAX_SIZE_KEY, newSize);
+    } else { 
+      setMaxSizeMB(1); 
+      saveToLocalStorage<number>(LOCAL_STORAGE_MAX_SIZE_KEY, 1);
+    }
+  };
+
+  const handleMaxWidthOrHeightChange = (value: string) => {
+    const newDim = parseInt(value, 10);
+    if (newDim && newDim > 0) {
+      setMaxWidthOrHeight(newDim);
+      saveToLocalStorage<number>(LOCAL_STORAGE_MAX_DIMENSION_KEY, newDim);
+    } else {
+      setMaxWidthOrHeight(1920);
+      saveToLocalStorage<number>(LOCAL_STORAGE_MAX_DIMENSION_KEY, 1920);
+    }
+  };
 
   const convertBlobToBase64 = (blob: Blob): Promise<string> =>
     new Promise((resolve, reject) => {
@@ -47,8 +85,8 @@ const ConvertAction: React.FC<ConvertActionProps> = ({
     const compressedImagesFiles: ConvertedImage[] = [];
 
     const options = {
-      maxSizeMB: 1,
-      maxWidthOrHeight: 1920,
+      maxSizeMB: maxSizeMB, // Use state variable
+      maxWidthOrHeight: maxWidthOrHeight, // Use state variable
       useWebWorker: true,
       // Consider adding onProgress for better UX if compression takes time
       // onProgress: (progress: number) => console.log(`Compression Progress: ${progress}%`),
@@ -101,6 +139,34 @@ const ConvertAction: React.FC<ConvertActionProps> = ({
     <div className="flex flex-col items-center justify-center space-y-4 p-4 md:w-auto w-full">
       {!processing ? (
         <>
+          {/* Configuration UI Elements */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4 w-full px-4">
+            <div className="space-y-2">
+              <Label htmlFor="maxSizeMB" className="text-sm font-medium">Max Size (MB)</Label>
+              <Input
+                id="maxSizeMB"
+                type="number"
+                value={maxSizeMB}
+                onChange={(e) => handleMaxSizeChange(e.target.value)}
+                min="0.1"
+                step="0.1"
+                className="w-full"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="maxWidthOrHeight" className="text-sm font-medium">Max Width/Height (px)</Label>
+              <Input
+                id="maxWidthOrHeight"
+                type="number"
+                value={maxWidthOrHeight}
+                onChange={(e) => handleMaxWidthOrHeightChange(e.target.value)}
+                min="100"
+                step="10"
+                className="w-full"
+              />
+            </div>
+          </div>
+
           <Button
             onClick={handleConversion}
             disabled={images.length === 0 || processing}
