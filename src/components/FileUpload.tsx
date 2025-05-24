@@ -1,9 +1,11 @@
 // src/components/FileUpload.tsx (or your preferred path)
-import React, { useState, type ChangeEvent, useEffect } from "react"; 
-import { Button } from "@/components/ui/button"; 
-import { Label } from "@/components/ui/label"; 
-import { UploadCloud, XCircle, FileImage, Eye } from "lucide-react"; 
-import AdvancedImagePreviewModal, { type ImageObject as ModalImageObject } from '@/components/modals/AdvancedImagePreviewModal'; // Import type
+import React, { useState, type ChangeEvent, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { UploadCloud, XCircle, FileImage, Eye } from "lucide-react";
+import AdvancedImagePreviewModal, {
+  type ImageObject as ModalImageObject,
+} from "@/components/modals/AdvancedImagePreviewModal"; // Import type
 
 // Assuming ConvertedImage is defined elsewhere (e.g. in a shared types file or FileRenderDownload.tsx)
 // If not, define it or import it. This prop is used to clear previous results.
@@ -14,14 +16,22 @@ export interface ConvertedImage {
 
 interface FileUploadProps {
   setImages: (images: File[]) => void;
-  setConverted: (convertedImages: ConvertedImage[]) => void; 
-  onApplyEdit?: (editedImage: { newSrc: string; originalIndex: number }) => void; // Add this
+  setConverted: (convertedImages: ConvertedImage[]) => void;
+  onApplyEdit?: (editedImage: {
+    newSrc: string;
+    originalIndex: number;
+  }) => void; // Add this
 }
 
-const FileUpload: React.FC<FileUploadProps> = ({ setImages, setConverted, onApplyEdit }) => { // Destructure onApplyEdit
+const FileUpload: React.FC<FileUploadProps> = ({
+  setImages,
+  setConverted,
+  onApplyEdit,
+}) => {
+  // Destructure onApplyEdit
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [previewIndex, setPreviewIndex] = useState<number | null>(null); 
-  const [previewUrl, setPreviewUrl] = useState<string>(""); 
+  const [previewIndex, setPreviewIndex] = useState<number | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string>("");
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -33,23 +43,25 @@ const FileUpload: React.FC<FileUploadProps> = ({ setImages, setConverted, onAppl
   };
 
   const handleRemoveFile = (indexToRemove: number) => {
-    const fileNameToRemove = selectedFiles[indexToRemove]?.name;
-    
+    // const fileNameToRemove = selectedFiles[indexToRemove]?.name;
+
     if (previewIndex !== null) {
       if (indexToRemove === previewIndex) {
         // Closing preview if the currently previewed item is removed
-        handlePreviewClose(); 
+        handlePreviewClose();
       } else if (indexToRemove < previewIndex) {
         // Adjust previewIndex if an item before it is removed
-        setPreviewIndex(prev => (prev !== null ? prev - 1 : null));
+        setPreviewIndex((prev) => (prev !== null ? prev - 1 : null));
       }
     }
 
-    const updatedFiles = selectedFiles.filter((_, index) => index !== indexToRemove);
+    const updatedFiles = selectedFiles.filter(
+      (_, index) => index !== indexToRemove
+    );
     setSelectedFiles(updatedFiles);
     setImages(updatedFiles);
     if (updatedFiles.length === 0) {
-      setConverted([]); 
+      setConverted([]);
     }
   };
 
@@ -59,7 +71,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ setImages, setConverted, onAppl
       return;
     }
     const fileToPreview = selectedFiles[index];
-    if (previewUrl) { 
+    if (previewUrl) {
       URL.revokeObjectURL(previewUrl);
     }
     const newPreviewUrl = URL.createObjectURL(fileToPreview);
@@ -74,7 +86,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ setImages, setConverted, onAppl
     }
     setPreviewIndex(null);
   };
-  
+
   // Effect for cleanup on unmount
   useEffect(() => {
     return () => {
@@ -150,7 +162,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ setImages, setConverted, onAppl
                       variant="outline"
                       size="icon"
                       className="h-8 w-8 p-1 transition-colors duration-150 ease-in-out" // Added transition
-                      onClick={() => handlePreviewOpen(index)} 
+                      onClick={() => handlePreviewOpen(index)}
                       title={`Preview ${file.name}`}
                     >
                       <Eye size={16} />
@@ -159,7 +171,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ setImages, setConverted, onAppl
                       variant="ghost"
                       size="icon"
                       className="text-destructive hover:text-destructive/80 h-8 w-8 p-1 rounded-full transition-colors duration-150 ease-in-out" // Added rounded-full and transition
-                      onClick={() => handleRemoveFile(index)} 
+                      onClick={() => handleRemoveFile(index)}
                       title={`Remove ${file.name}`}
                     >
                       <XCircle size={20} />
@@ -171,24 +183,23 @@ const FileUpload: React.FC<FileUploadProps> = ({ setImages, setConverted, onAppl
           </div>
         </div>
       )}
-
       {/* Advanced Image Preview Modal with Navigation for Uploaded Files */}
       {previewIndex !== null && selectedFiles[previewIndex] && (
-         <AdvancedImagePreviewModal
-            isOpen={previewIndex !== null && !!previewUrl}
-            onClose={handlePreviewClose}
-            images={selectedFiles.map(
-              (file): ModalImageObject => ({
-                src: '', // Placeholder, actual src is via imageOverrideSrc
-                alt: `Preview of ${file.name}`,
-                title: file.name,
-              })
-            )}
-            currentIndex={previewIndex}
-            onNavigate={(newIndex) => handlePreviewOpen(newIndex)}
-            imageOverrideSrc={previewUrl}
-            onApplyEdit={onApplyEdit} // Pass down the prop
-          />
+        <AdvancedImagePreviewModal
+          isOpen={previewIndex !== null && !!previewUrl}
+          onClose={handlePreviewClose}
+          images={selectedFiles.map(
+            (file): ModalImageObject => ({
+              src: "", // Placeholder, actual src is via imageOverrideSrc
+              alt: `Preview of ${file.name}`,
+              title: file.name,
+            })
+          )}
+          currentIndex={previewIndex}
+          onNavigate={(newIndex) => handlePreviewOpen(newIndex)}
+          imageOverrideSrc={previewUrl}
+          onApplyEdit={onApplyEdit} // Pass down the prop
+        />
       )}
     </div>
   );

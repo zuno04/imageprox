@@ -1,5 +1,4 @@
-// src/lib/utils.test.ts
-import { saveToLocalStorage, loadFromLocalStorage } from './utils';
+import { saveToLocalStorage, loadFromLocalStorage } from "./utils";
 
 // Simple localStorage mock for testing environment if needed
 const mockLocalStorage = (() => {
@@ -22,10 +21,9 @@ const mockLocalStorage = (() => {
 // In many modern test runners (like Vitest/Jest with jsdom), actual localStorage might be available or mocked.
 // If the worker's environment doesn't have it, this mock is crucial.
 // For now, assume worker might need it, or can adapt if localStorage is present.
-if (typeof localStorage === 'undefined') {
-  global.localStorage = mockLocalStorage as any;
+if (typeof localStorage === "undefined") {
+  global.localStorage = mockLocalStorage as Storage;
 }
-
 
 const runTests = () => {
   console.log("Running localStorage utility tests...");
@@ -37,8 +35,9 @@ const runTests = () => {
       testFn();
       console.log(`✅ PASSED: ${description}`);
       testsPassed++;
-    } catch (e: any) {
-      console.error(`❌ FAILED: ${description}`, e.message);
+    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : String(e);
+      console.error(`❌ FAILED: ${description}`, errorMessage);
       testsFailed++;
     }
   };
@@ -75,27 +74,38 @@ const runTests = () => {
     const value = { name: "Jules", type: "agent" };
     saveToLocalStorage(key, value);
     const loaded = loadFromLocalStorage<{ name: string; type: string }>(key);
-    console.assert(loaded !== null && loaded.name === value.name && loaded.type === value.type, `Object mismatch`);
+    console.assert(
+      loaded !== null &&
+        loaded.name === value.name &&
+        loaded.type === value.type,
+      `Object mismatch`
+    );
   });
 
   test("should return null for a non-existent key", () => {
     const loaded = loadFromLocalStorage<string>("nonExistentKey");
     console.assert(loaded === null, `Expected null, got "${loaded}"`);
   });
-  
+
   localStorage.clear(); // Clear for next test
 
   test("should return null and log error for malformed JSON", () => {
     const key = "malformedJson";
     localStorage.setItem(key, "{ not: json }"); // Manually set malformed JSON
-    
+
     // Suppress console.error for this specific test if possible, or check if it was called
     const originalConsoleError = console.error;
     let errorLogged = false;
-    console.error = (...args) => { errorLogged = true; originalConsoleError(...args); };
-    
-    const loaded = loadFromLocalStorage<any>(key);
-    console.assert(loaded === null, `Expected null for malformed JSON, got ${typeof loaded}`);
+    console.error = (...args) => {
+      errorLogged = true;
+      originalConsoleError(...args);
+    };
+
+    const loaded = loadFromLocalStorage<unknown>(key);
+    console.assert(
+      loaded === null,
+      `Expected null for malformed JSON, got ${typeof loaded}`
+    );
     console.assert(errorLogged, "Error was not logged for malformed JSON");
 
     console.error = originalConsoleError; // Restore console.error
@@ -104,7 +114,9 @@ const runTests = () => {
   localStorage.clear();
 
   console.log("--------------------");
-  console.log(`Tests Completed. Passed: ${testsPassed}, Failed: ${testsFailed}`);
+  console.log(
+    `Tests Completed. Passed: ${testsPassed}, Failed: ${testsFailed}`
+  );
   if (testsFailed > 0) {
     //   throw new Error(`${testsFailed} tests failed!`); // Optionally throw to indicate failure clearly
   }
@@ -112,8 +124,10 @@ const runTests = () => {
 
 // To actually run the tests (e.g., if this file were executed with node or ts-node)
 // For the worker, it will just create the file. Execution might be separate.
-// runTests(); 
+runTests();
 // We can add a small export or a comment to indicate how to run them.
 // export { runTests }; // Or just have the worker confirm file creation.
 
-console.log("utils.test.ts created. To run tests, import and call runTests() or use a test runner.");
+console.log(
+  "utils.test.ts created. To run tests, import and call runTests() or use a test runner."
+);
