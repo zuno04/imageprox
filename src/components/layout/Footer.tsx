@@ -10,7 +10,7 @@ export function Footer() {
         </p>
         <p>
           <a
-            href="mailto:feedback@example.com?subject=ImageMod App Feedback"
+            href="mailto:emaga87@gmail.com?subject=ImageMod App Feedback"
             className="hover:text-primary hover:underline transition-colors"
           >
             Send Feedback

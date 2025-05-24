@@ -77,8 +77,8 @@ function App() {
     <div className="min-h-screen bg-background text-foreground flex flex-col items-center selection:bg-primary selection:text-primary-foreground">
       <Header />
       {/* Main container for content */}
-      <div className="container mx-auto max-w-5xl w-full flex-grow p-4 md:p-8 space-y-10">
-        <header className="text-center py-8">
+      <div className="container mx-auto max-w-7xl w-full flex-grow p-4 md:p-8 space-y-10">
+        <header className="text-center py-4 md:py-8 space-y-4">
           {" "}
           {/* Removed relative positioning and ThemeToggle div */}
           {/* ThemeToggle removed from here */}
