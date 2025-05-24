@@ -1,0 +1,57 @@
+{
+  "greeting": "Hallo!",
+  "languageName": "Deutsch",
+  "header": {
+    "title": "ImageProx"
+  },
+  "footer": {
+    "copyright": "ImageProx © {{year}}. Entwickelt mit React, Vite, TypeScript & Shadcn/ui.",
+    "sendFeedback": "Feedback senden",
+    "githubProfile": "GitHub Profil"
+  },
+  "fileUpload": {
+    "cardTitle": "Dateien hochladen",
+    "clickToUpload": "Klicken zum Hochladen",
+    "dragAndDrop": "oder per Drag & Drop ziehen",
+    "imageTypes": "Bilder (PNG, JPG, GIF, WEBP usw.)",
+    "selectedFiles_zero": "Ausgewählte Dateien (0):",
+    "selectedFiles_one": "Ausgewählte Datei ({{count}}):",
+    "selectedFiles_other": "Ausgewählte Dateien ({{count}}):",
+    "previewAlt": "Vorschau von {{fileName}}",
+    "previewTitle": "Vorschau {{fileName}}",
+    "removeTitle": "Entfernen {{fileName}}"
+  },
+  "convertAction": {
+    "cardTitle": "Bilder verarbeiten",
+    "upladImages": "Laden Sie einige Bilder hoch, um die Verarbeitung zu beginnen.",
+    "title": "Ihr Bildoptimierer",
+    "subTitle": "Laden Sie Ihre Bilder hoch, reduzieren Sie deren Größe direkt in Ihrem Browser und laden Sie sie einzeln oder als ZIP herunter!",
+    "maxSizeLabel": "Max. Größe (MB)",
+    "maxDimensionLabel": "Max. B/H (px)",
+    "outputFormatLabel": "Ausgabeformat",
+    "selectFormatPlaceholder": "Format auswählen",
+    "formatOriginal": "Original beibehalten",
+    "formatPng": "PNG",
+    "formatJpg": "JPG",
+    "formatWebp": "WEBP",
+    "webpWarning": "WEBP bietet eine bessere Komprimierung, wird aber möglicherweise nicht von allen Geräten unterstützt.",
+    "compressionModeLabel": "Komprimierungsmodus",
+    "modeAggressive": "Aggressiv (Kleinere Größe)",
+    "modeHighQuality": "Hohe Qualität (Größere Größe)",
+    "keepExifLabel": "EXIF-Daten beibehalten (Kamera, GPS). Gilt für JPEGs. Kann die Größe erhöhen.",
+    "processButton_zero": "Bilder verarbeiten",
+    "processButton_one": "Bild verarbeiten ({{count}})",
+    "processButton_other": "Bilder verarbeiten ({{count}})",
+    "compressionFailed": "Komprimierung fehlgeschlagen: {{message}}",
+    "processingMessage": "Bilder werden verarbeitet...",
+    "errorFailedToReadBlob": "Fehler beim Lesen des Blobs.",
+    "errorUnexpectedResultFormat": "Unerwartetes Ergebnisformat.",
+    "errorUnknown": "Unbekannter Fehler.",
+    "reducedFileNamePrefix": "Reduziert_"
+  },
+  "downloadResults": {
+    "cardTitle": "Ergebnisse herunterladen",
+    "noDownload": "Noch keine konvertierten Bilder zum Anzeigen oder Herunterladen vorhanden.",
+    "processFirst": "Verarbeiten Sie zuerst einige Bilder!"
+  }
+}

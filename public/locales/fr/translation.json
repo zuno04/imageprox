@@ -1,0 +1,57 @@
+{
+  "greeting": "Bonjour !",
+  "languageName": "Français",
+  "header": {
+    "title": "ImageProx"
+  },
+  "footer": {
+    "copyright": "ImageProx © {{year}}. Construit avec React, Vite, TypeScript & Shadcn/ui.",
+    "sendFeedback": "Envoyer des commentaires",
+    "githubProfile": "Profil GitHub"
+  },
+  "fileUpload": {
+    "cardTitle": "Téléverser les fichiers",
+    "clickToUpload": "Cliquez pour téléverser",
+    "dragAndDrop": "ou glissez-déposez",
+    "imageTypes": "Images (PNG, JPG, GIF, WEBP etc.)",
+    "selectedFiles_zero": "Fichiers sélectionnés (0) :",
+    "selectedFiles_one": "Fichier sélectionné ({{count}}) :",
+    "selectedFiles_other": "Fichiers sélectionnés ({{count}}) :",
+    "previewAlt": "Aperçu de {{fileName}}",
+    "previewTitle": "Aperçu {{fileName}}",
+    "removeTitle": "Supprimer {{fileName}}"
+  },
+  "convertAction": {
+    "cardTitle": "Traiter les images",
+    "upladImages": "Téléversez des images pour commencer le traitement.",
+    "title": "Votre Optimiseur d'images",
+    "subTitle": "Téléchargez vos images, réduisez leur taille directement dans votre navigateur et téléchargez-les individuellement ou en ZIP !",
+    "maxSizeLabel": "Taille max (Mo)",
+    "maxDimensionLabel": "L/H max (px)",
+    "outputFormatLabel": "Format de sortie",
+    "selectFormatPlaceholder": "Sélectionner le format",
+    "formatOriginal": "Conserver l'original",
+    "formatPng": "PNG",
+    "formatJpg": "JPG",
+    "formatWebp": "WEBP",
+    "webpWarning": "WEBP offre une meilleure compression mais peut ne pas être pris en charge par tous les appareils.",
+    "compressionModeLabel": "Mode de compression",
+    "modeAggressive": "Agressive (plus petite taille)",
+    "modeHighQuality": "Haute qualité (plus grande taille)",
+    "keepExifLabel": "Conserver les données EXIF (appareil photo, GPS). S'applique aux JPEG. Peut augmenter la taille.",
+    "processButton_zero": "Traiter les images",
+    "processButton_one": "Traiter l'image ({{count}})",
+    "processButton_other": "Traiter les images ({{count}})",
+    "compressionFailed": "Échec de la compression : {{message}}",
+    "processingMessage": "Traitement des images...",
+    "errorFailedToReadBlob": "Échec de la lecture du blob.",
+    "errorUnexpectedResultFormat": "Format de résultat inattendu.",
+    "errorUnknown": "Erreur inconnue.",
+    "reducedFileNamePrefix": "Réduit_"
+  },
+  "downloadResults": {
+    "cardTitle": "Télécharger les résultats",
+    "noDownload": "Aucune image convertie à afficher ou à télécharger pour le moment.",
+    "processFirst": "Traitez d'abord quelques images !"
+  }
+}

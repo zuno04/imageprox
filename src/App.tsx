@@ -11,8 +11,11 @@ import ConvertAction from "./components/ConvertAction";
 // import { ThemeToggle } from "./components/ui/ThemeToggle"; // Removed ThemeToggle import
 import { Header } from "./components/layout/Header"; // Added Header import
 import { Footer } from "./components/layout/Footer"; // Added Footer import
+import { useTranslation } from "react-i18next";
 
 function App() {
+  const { t } = useTranslation(); // Initialize useTranslation
+
   const [imagesToProcess, setImagesToProcess] = useState<File[]>([]);
   const [convertedImages, setConvertedImages] = useState<ConvertedImageType[]>(
     []
@@ -83,11 +86,10 @@ function App() {
           {/* Removed relative positioning and ThemeToggle div */}
           {/* ThemeToggle removed from here */}
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-primary">
-            Client-Side Image Optimizer
+            {t("convertAction.title")}
           </h1>
           <p className="mt-3 text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-            Upload your images, reduce their size directly in your browser, and
-            download them individually or as a ZIP!
+            {t("convertAction.subTitle")}
           </p>
         </header>
 
@@ -98,7 +100,7 @@ function App() {
             {" "}
             {/* Changed rounded-xl to rounded-lg */}
             <h2 className="text-2xl font-semibold text-center border-b border-border pb-3 mb-4">
-              1. Upload Files
+              1. {t("fileUpload.cardTitle")}
             </h2>
             <FileUpload
               setImages={setImagesToProcess}
@@ -112,7 +114,7 @@ function App() {
             {" "}
             {/* Changed rounded-xl to rounded-lg */}
             <h2 className="text-2xl font-semibold text-center border-b border-border pb-3 mb-4">
-              2. Process Images
+              2. {t("convertAction.cardTitle")}
             </h2>
             {imagesToProcess.length > 0 ? (
               <ConvertAction
@@ -122,7 +124,7 @@ function App() {
             ) : (
               <div className="text-center py-10">
                 <p className="text-muted-foreground">
-                  Upload some images to start processing.
+                  {t("convertAction.upladImages")}
                 </p>
               </div>
             )}
@@ -133,7 +135,7 @@ function App() {
             {" "}
             {/* Changed rounded-xl to rounded-lg */}
             <h2 className="text-2xl font-semibold text-center border-b border-border pb-3 mb-4">
-              3. Download Results
+              3. {t("downloadResults.cardTitle")}
             </h2>
             <FileRenderDownload
               converted={convertedImages}
