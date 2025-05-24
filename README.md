@@ -1,32 +1,32 @@
-# ImageMod - Client-Side Image Optimizer & Editor
+# ImageProx - Client-Side Image Optimizer & Editor
 
-ImageMod is a powerful, browser-based image optimization and editing tool. It allows users to upload images, compress them with configurable settings, perform basic edits, and download them individually or as a batch—all directly in the browser, ensuring privacy and speed.
+ImageProx is a powerful, browser-based image optimization and editing tool. It allows users to upload images, compress them with configurable settings, perform basic edits, and download them individually or as a batch—all directly in the browser, ensuring privacy and speed.
 
 ## Features
 
 - **Client-Side Processing:** All image manipulations happen directly in your browser. No data is sent to a server.
 - **Multiple Image Upload:** Upload one or more images to process.
 - **Image Compression:**
-    - Reduce image file sizes significantly.
-    - **Configurable Settings:** Adjust "Max Size (MB)" and "Max Width/Height (px)" to control the compression level. These settings are saved to LocalStorage.
+  - Reduce image file sizes significantly.
+  - **Configurable Settings:** Adjust "Max Size (MB)" and "Max Width/Height (px)" to control the compression level. These settings are saved to LocalStorage.
 - **Download Options:**
-    - Download processed images individually.
-    - Download all processed images as a single ZIP file.
+  - Download processed images individually.
+  - Download all processed images as a single ZIP file.
 - **Advanced Image Preview Modal:**
-    - **Zoom:** Zoom in and out using buttons or the mouse wheel. Zoom level is saved to LocalStorage.
-    - **View Rotation:** Rotate the image view by 90-degree increments.
-    - **Image Navigation:** Navigate between multiple images in a set using "Next"/"Previous" buttons or keyboard arrow keys.
-    - **Download from Preview:** Download the currently previewed image directly from the modal.
-    - **Keyboard Shortcuts:**
-        - `Esc`: Close the preview modal.
-        - `ArrowRight`: View next image.
-        - `ArrowLeft`: View previous image.
+  - **Zoom:** Zoom in and out using buttons or the mouse wheel. Zoom level is saved to LocalStorage.
+  - **View Rotation:** Rotate the image view by 90-degree increments.
+  - **Image Navigation:** Navigate between multiple images in a set using "Next"/"Previous" buttons or keyboard arrow keys.
+  - **Download from Preview:** Download the currently previewed image directly from the modal.
+  - **Keyboard Shortcuts:**
+    - `Esc`: Close the preview modal.
+    - `ArrowRight`: View next image.
+    - `ArrowLeft`: View previous image.
 - **Basic Image Editing (In-Preview):**
-    - **Rotate Image Data:** Permanently rotate the image data by 90 degrees clockwise.
-    - **Grayscale Filter:** Apply a grayscale filter to the image data.
-    - **Apply Edits:** Save these edits back to the image list (for both uploaded and converted images).
+  - **Rotate Image Data:** Permanently rotate the image data by 90 degrees clockwise.
+  - **Grayscale Filter:** Apply a grayscale filter to the image data.
+  - **Apply Edits:** Save these edits back to the image list (for both uploaded and converted images).
 - **Theme Customization:**
-    - **Light/Dark Mode:** Switch between light and dark themes. Theme preference is saved to LocalStorage.
+  - **Light/Dark Mode:** Switch between light and dark themes. Theme preference is saved to LocalStorage.
 - **Responsive UI:** Designed to work effectively across various screen sizes, from mobile to desktop.
 - **User Feedback:** A "Send Feedback" link in the footer for easy communication.
 - **Persistence:** User preferences for theme, zoom level (in preview), and compression settings are saved locally using LocalStorage.
@@ -53,6 +53,7 @@ ImageMod is a powerful, browser-based image optimization and editing tool. It al
 ### Installation
 
 1.  **Clone the repository (if applicable):**
+
     ```bash
     # git clone <repository-url>
     # cd <repository-directory>

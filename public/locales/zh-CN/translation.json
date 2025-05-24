@@ -2,15 +2,30 @@
   "greeting": "你好！",
   "languageName": "简体中文",
   "header": {
-    "title": "ImageMod"
+    "title": "ImageProx"
   },
   "footer": {
-    "copyright": "ImageMod © {{year}}. 使用 React、Vite、TypeScript 和 Shadcn/ui 构建。",
+    "copyright": "ImageProx © {{year}}. 使用 React、Vite、TypeScript 和 Shadcn/ui 构建。",
     "sendFeedback": "发送反馈",
     "githubProfile": "GitHub 个人资料"
   },
+  "fileUpload": {
+    "cardTitle": "上传文件",
+    "clickToUpload": "点击上传",
+    "dragAndDrop": "或拖放文件",
+    "imageTypes": "图片 (PNG, JPG, GIF, WEBP 等)",
+    "selectedFiles_zero": "已选文件 (0):",
+    "selectedFiles_one": "已选文件 ({{count}}):",
+    "selectedFiles_other": "已选文件 ({{count}}):",
+    "previewAlt": "{{fileName}} 的预览",
+    "previewTitle": "预览 {{fileName}}",
+    "removeTitle": "移除 {{fileName}}"
+  },
   "convertAction": {
-    "title": "上传您的图片，缩小它们的尺寸，然后下载它们！",
+    "cardTitle": "处理图片",
+    "upladImages": "上传一些图片开始处理。",
+    "title": "您的图片优化器",
+    "subTitle": "上传您的图片，直接在浏览器中减小它们的大小，然后单独下载或打包下载！",
     "maxSizeLabel": "最大尺寸 (MB)",
     "maxDimensionLabel": "最大宽度/高度 (px)",
     "outputFormatLabel": "输出格式",
@@ -34,15 +49,9 @@
     "errorUnknown": "未知错误。",
     "reducedFileNamePrefix": "已压缩_"
   },
-  "fileUpload": {
-    "clickToUpload": "点击上传",
-    "dragAndDrop": "或拖放文件",
-    "imageTypes": "图片 (PNG, JPG, GIF, WEBP 等)",
-    "selectedFiles_zero": "已选文件 (0):",
-    "selectedFiles_one": "已选文件 ({{count}}):",
-    "selectedFiles_other": "已选文件 ({{count}}):",
-    "previewAlt": "{{fileName}} 的预览",
-    "previewTitle": "预览 {{fileName}}",
-    "removeTitle": "移除 {{fileName}}"
+  "downloadResults": {
+    "cardTitle": "下载结果",
+    "noDownload": "暂时没有可显示或下载的转换图片。",
+    "processFirst": "请先处理一些图片！"
   }
 }

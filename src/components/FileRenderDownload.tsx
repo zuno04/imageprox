@@ -1,9 +1,12 @@
-import React, { useState } from "react"; 
+import React, { useState } from "react";
 
-import { Button } from "@/components/ui/button"; 
-import { Download, FileText, Eye } from "lucide-react"; 
+import { Button } from "@/components/ui/button";
+import { Download, FileText, Eye } from "lucide-react";
 import { generateZip } from "@/lib/jzip";
-import AdvancedImagePreviewModal, { type ImageObject as ModalImageObject } from '@/components/modals/AdvancedImagePreviewModal'; // Import type
+import AdvancedImagePreviewModal, {
+  type ImageObject as ModalImageObject,
+} from "@/components/modals/AdvancedImagePreviewModal"; // Import type
+import { useTranslation } from "react-i18next";
 
 // Assuming ConvertedImage type is defined elsewhere (e.g., in ConvertAction.tsx or a shared types file)
 // If not, define it here or import it:
@@ -21,6 +24,8 @@ const FileRenderDownload: React.FC<FileRenderDownloadProps> = ({
   converted,
   onApplyEdit, // Destructure the prop
 }) => {
+  const { t } = useTranslation(); // Initialize useTranslation
+
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
 
   // Removed temporary handleApplyEditToList
@@ -57,13 +62,13 @@ const FileRenderDownload: React.FC<FileRenderDownloadProps> = ({
                     <FileText size={18} className="flex-shrink-0" />
                     <span className="truncate">{image.image_name}</span>
                   </a>
-                  <div className="flex items-center space-x-1"> 
+                  <div className="flex items-center space-x-1">
                     {/* DialogTrigger removed */}
                     <Button
                       variant="outline"
                       size="icon"
                       className="h-8 w-8 p-1 transition-colors duration-150 ease-in-out" // Added transition
-                      onClick={() => setPreviewIndex(index)} 
+                      onClick={() => setPreviewIndex(index)}
                       title={`Preview ${image.image_name}`}
                     >
                       <Eye size={16} />
@@ -101,7 +106,8 @@ const FileRenderDownload: React.FC<FileRenderDownloadProps> = ({
               isOpen={previewIndex !== null}
               onClose={() => setPreviewIndex(null)}
               images={converted.map(
-                (img): ModalImageObject => ({ // Map to ModalImageObject
+                (img): ModalImageObject => ({
+                  // Map to ModalImageObject
                   src: img.image_data,
                   alt: `Preview of ${img.image_name}`,
                   title: img.image_name,
@@ -116,8 +122,8 @@ const FileRenderDownload: React.FC<FileRenderDownloadProps> = ({
         </>
       ) : (
         <div className="text-center text-muted-foreground p-8 border rounded-lg">
-          <p>No converted images to display or download yet.</p>
-          <p className="text-sm">Process some images first!</p>
+          <p>{t("downloadResults.noDownload")}</p>
+          <p className="text-sm">{t("downloadResults.processFirst")}</p>
         </div>
       )}
     </div>

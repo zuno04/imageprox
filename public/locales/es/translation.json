@@ -2,15 +2,30 @@
   "greeting": "¡Hola!",
   "languageName": "Español",
   "header": {
-    "title": "ImageMod"
+    "title": "ImageProx"
   },
   "footer": {
-    "copyright": "ImageMod © {{year}}. Creado con React, Vite, TypeScript & Shadcn/ui.",
+    "copyright": "ImageProx © {{year}}. Creado con React, Vite, TypeScript & Shadcn/ui.",
     "sendFeedback": "Enviar comentarios",
     "githubProfile": "Perfil de GitHub"
   },
+  "fileUpload": {
+    "cardTitle": "Subir archivos",
+    "clickToUpload": "Haz clic para subir",
+    "dragAndDrop": "o arrastra y suelta",
+    "imageTypes": "Imágenes (PNG, JPG, GIF, WEBP etc.)",
+    "selectedFiles_zero": "Archivos seleccionados (0):",
+    "selectedFiles_one": "Archivo seleccionado ({{count}}):",
+    "selectedFiles_other": "Archivos seleccionados ({{count}}):",
+    "previewAlt": "Vista previa de {{fileName}}",
+    "previewTitle": "Vista previa {{fileName}}",
+    "removeTitle": "Eliminar {{fileName}}"
+  },
   "convertAction": {
-    "title": "¡Sube tus imágenes, reduce su tamaño y descárgalas!",
+    "cardTitle": "Procesar imágenes",
+    "upladImages": "Sube algunas imágenes para comenzar a procesar.",
+    "title": "Su optimizador de imágenes",
+    "subTitle": "¡Sube tus imágenes, reduce su tamaño directamente en tu navegador y descárgalas individualmente o en un ZIP!",
     "maxSizeLabel": "Tamaño máx. (MB)",
     "maxDimensionLabel": "Ancho/Alto máx. (px)",
     "outputFormatLabel": "Formato de salida",
@@ -34,15 +49,9 @@
     "errorUnknown": "Error desconocido.",
     "reducedFileNamePrefix": "Reducido_"
   },
-  "fileUpload": {
-    "clickToUpload": "Haz clic para subir",
-    "dragAndDrop": "o arrastra y suelta",
-    "imageTypes": "Imágenes (PNG, JPG, GIF, WEBP etc.)",
-    "selectedFiles_zero": "Archivos seleccionados (0):",
-    "selectedFiles_one": "Archivo seleccionado ({{count}}):",
-    "selectedFiles_other": "Archivos seleccionados ({{count}}):",
-    "previewAlt": "Vista previa de {{fileName}}",
-    "previewTitle": "Vista previa {{fileName}}",
-    "removeTitle": "Eliminar {{fileName}}"
+  "downloadResults": {
+    "cardTitle": "Descargar resultados",
+    "noDownload": "Aún no hay imágenes convertidas para mostrar o descargar.",
+    "processFirst": "¡Procesa algunas imágenes primero!"
   }
 }

@@ -2,15 +2,30 @@
   "greeting": "Hello!",
   "languageName": "English",
   "header": {
-    "title": "ImageMod"
+    "title": "ImageProx"
   },
   "footer": {
-    "copyright": "ImageMod © {{year}}. Built with React, Vite, TypeScript & Shadcn/ui.",
+    "copyright": "ImageProx © {{year}}. Built with React, Vite, TypeScript & Shadcn/ui.",
     "sendFeedback": "Send Feedback",
     "githubProfile": "GitHub Profile"
   },
+  "fileUpload": {
+    "cardTitle": "Upload Files",
+    "clickToUpload": "Click to upload",
+    "dragAndDrop": "or drag and drop",
+    "imageTypes": "Images (PNG, JPG, GIF, WEBP etc.)",
+    "selectedFiles_zero": "Selected files (0):",
+    "selectedFiles_one": "Selected file ({{count}}):",
+    "selectedFiles_other": "Selected files ({{count}}):",
+    "previewAlt": "Preview of {{fileName}}",
+    "previewTitle": "Preview {{fileName}}",
+    "removeTitle": "Remove {{fileName}}"
+  },
   "convertAction": {
-    "title": "Upload your images, reduce their size, and download them!",
+    "cardTitle": "Process Images",
+    "upladImages": "Upload some images to start processing.",
+    "title": "Your Image Optimizer",
+    "subTitle": "Upload your images, reduce their size directly in your browser, and download them individually or as a ZIP!",
     "maxSizeLabel": "Max Size (MB)",
     "maxDimensionLabel": "Max W/H (px)",
     "outputFormatLabel": "Output Format",
@@ -34,15 +49,9 @@
     "errorUnknown": "Unknown error.",
     "reducedFileNamePrefix": "Reduced_"
   },
-  "fileUpload": {
-    "clickToUpload": "Click to upload",
-    "dragAndDrop": "or drag and drop",
-    "imageTypes": "Images (PNG, JPG, GIF, WEBP etc.)",
-    "selectedFiles_zero": "Selected files (0):",
-    "selectedFiles_one": "Selected file ({{count}}):",
-    "selectedFiles_other": "Selected files ({{count}}):",
-    "previewAlt": "Preview of {{fileName}}",
-    "previewTitle": "Preview {{fileName}}",
-    "removeTitle": "Remove {{fileName}}"
+  "downloadResults": {
+    "cardTitle": "Download Results",
+    "noDownload": "No converted images to display or download yet.",
+    "processFirst": "Process some images first!"
   }
 }
