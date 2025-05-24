@@ -1,0 +1,48 @@
+{
+  "greeting": "你好！",
+  "languageName": "简体中文",
+  "header": {
+    "title": "ImageMod"
+  },
+  "footer": {
+    "copyright": "ImageMod © {{year}}. 使用 React、Vite、TypeScript 和 Shadcn/ui 构建。",
+    "sendFeedback": "发送反馈",
+    "githubProfile": "GitHub 个人资料"
+  },
+  "convertAction": {
+    "title": "上传您的图片，缩小它们的尺寸，然后下载它们！",
+    "maxSizeLabel": "最大尺寸 (MB)",
+    "maxDimensionLabel": "最大宽度/高度 (px)",
+    "outputFormatLabel": "输出格式",
+    "selectFormatPlaceholder": "选择格式",
+    "formatOriginal": "保留原始格式",
+    "formatPng": "PNG",
+    "formatJpg": "JPG",
+    "formatWebp": "WEBP",
+    "webpWarning": "WEBP 提供更好的压缩效果，但可能并非所有设备都支持。",
+    "compressionModeLabel": "压缩模式",
+    "modeAggressive": "积极压缩 (较小尺寸)",
+    "modeHighQuality": "高质量 (较大尺寸)",
+    "keepExifLabel": "保留 EXIF 数据（相机、GPS）。适用于 JPEG。可能会增加文件大小。",
+    "processButton_zero": "处理图片",
+    "processButton_one": "处理图片 ({{count}})",
+    "processButton_other": "处理图片 ({{count}})",
+    "compressionFailed": "压缩失败：{{message}}",
+    "processingMessage": "正在处理图片...",
+    "errorFailedToReadBlob": "读取 blob 失败。",
+    "errorUnexpectedResultFormat": "意外的结果格式。",
+    "errorUnknown": "未知错误。",
+    "reducedFileNamePrefix": "已压缩_"
+  },
+  "fileUpload": {
+    "clickToUpload": "点击上传",
+    "dragAndDrop": "或拖放文件",
+    "imageTypes": "图片 (PNG, JPG, GIF, WEBP 等)",
+    "selectedFiles_zero": "已选文件 (0):",
+    "selectedFiles_one": "已选文件 ({{count}}):",
+    "selectedFiles_other": "已选文件 ({{count}}):",
+    "previewAlt": "{{fileName}} 的预览",
+    "previewTitle": "预览 {{fileName}}",
+    "removeTitle": "移除 {{fileName}}"
+  }
+}

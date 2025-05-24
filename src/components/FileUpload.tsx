@@ -1,5 +1,6 @@
 // src/components/FileUpload.tsx (or your preferred path)
 import React, { useState, type ChangeEvent, useEffect } from "react";
+import { useTranslation } from 'react-i18next'; // Import useTranslation
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { UploadCloud, XCircle, FileImage, Eye } from "lucide-react";
@@ -32,6 +33,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>("");
+  const { t } = useTranslation(); // Initialize useTranslation
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -110,12 +112,12 @@ const FileUpload: React.FC<FileUploadProps> = ({
             <UploadCloud className="w-10 h-10 mb-3 text-muted-foreground" />
             <p className="mb-2 text-sm text-muted-foreground">
               <span className="font-semibold text-primary">
-                Click to upload
+                {t('fileUpload.clickToUpload')}
               </span>{" "}
-              or drag and drop
+              {t('fileUpload.dragAndDrop')}
             </p>
             <p className="text-xs text-muted-foreground">
-              Images (PNG, JPG, GIF, WEBP etc.)
+              {t('fileUpload.imageTypes')}
             </p>
           </div>
           <input
@@ -132,7 +134,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
       {selectedFiles.length > 0 && (
         <div className="space-y-3">
           <p className="text-sm font-medium text-center text-foreground">
-            Selected files ({selectedFiles.length}):
+            {t('fileUpload.selectedFiles', { count: selectedFiles.length })}
           </p>
           <div className="border rounded-lg p-3 max-h-60 overflow-y-auto bg-card">
             <ul className="space-y-2">
@@ -163,7 +165,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
                       size="icon"
                       className="h-8 w-8 p-1 transition-colors duration-150 ease-in-out" // Added transition
                       onClick={() => handlePreviewOpen(index)}
-                      title={`Preview ${file.name}`}
+                      title={t('fileUpload.previewTitle', { fileName: file.name })}
                     >
                       <Eye size={16} />
                     </Button>
@@ -172,7 +174,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
                       size="icon"
                       className="text-destructive hover:text-destructive/80 h-8 w-8 p-1 rounded-full transition-colors duration-150 ease-in-out" // Added rounded-full and transition
                       onClick={() => handleRemoveFile(index)}
-                      title={`Remove ${file.name}`}
+                      title={t('fileUpload.removeTitle', { fileName: file.name })}
                     >
                       <XCircle size={20} />
                     </Button>
@@ -191,7 +193,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
           images={selectedFiles.map(
             (file): ModalImageObject => ({
               src: "", // Placeholder, actual src is via imageOverrideSrc
-              alt: `Preview of ${file.name}`,
+              alt: t('fileUpload.previewAlt', { fileName: file.name }),
               title: file.name,
             })
           )}
