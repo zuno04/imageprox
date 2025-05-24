@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react"; 
 
-import { Button } from "@/components/ui/button"; // Adjust path if needed
-import { Download, FileText } from "lucide-react"; // Icons
+import { Button } from "@/components/ui/button"; 
+import { Download, FileText, Eye } from "lucide-react"; 
 import { generateZip } from "@/lib/jzip";
+import AdvancedImagePreviewModal, { type ImageObject as ModalImageObject } from '@/components/modals/AdvancedImagePreviewModal'; // Import type
 
 // Assuming ConvertedImage type is defined elsewhere (e.g., in ConvertAction.tsx or a shared types file)
 // If not, define it here or import it:
@@ -13,11 +14,17 @@ export interface ConvertedImage {
 
 interface FileRenderDownloadProps {
   converted: ConvertedImage[];
+  onApplyEdit: (editedImage: { newSrc: string; originalIndex: number }) => void; // Made required
 }
 
 const FileRenderDownload: React.FC<FileRenderDownloadProps> = ({
   converted,
+  onApplyEdit, // Destructure the prop
 }) => {
+  const [previewIndex, setPreviewIndex] = useState<number | null>(null);
+
+  // Removed temporary handleApplyEditToList
+
   const downloadImagesZip = () => {
     if (converted.length > 0) {
       generateZip(converted);
@@ -50,16 +57,29 @@ const FileRenderDownload: React.FC<FileRenderDownloadProps> = ({
                     <FileText size={18} className="flex-shrink-0" />
                     <span className="truncate">{image.image_name}</span>
                   </a>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    asChild // Allows the Button to act as the <a> tag for download
-                    title={`Download ${image.image_name}`}
-                  >
-                    <a download={image.image_name} href={image.image_data}>
-                      <Download size={16} />
-                    </a>
-                  </Button>
+                  <div className="flex items-center space-x-1"> 
+                    {/* DialogTrigger removed */}
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-8 w-8 p-1 transition-colors duration-150 ease-in-out" // Added transition
+                      onClick={() => setPreviewIndex(index)} 
+                      title={`Preview ${image.image_name}`}
+                    >
+                      <Eye size={16} />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 p-1 rounded-full transition-colors duration-150 ease-in-out" // Added rounded-full and transition
+                      asChild
+                      title={`Download ${image.image_name}`}
+                    >
+                      <a download={image.image_name} href={image.image_data}>
+                        <Download size={20} />
+                      </a>
+                    </Button>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -74,6 +94,25 @@ const FileRenderDownload: React.FC<FileRenderDownloadProps> = ({
             <Download size={18} className="mr-2" />
             Download All as ZIP
           </Button>
+
+          {/* Advanced Image Preview Modal with Navigation */}
+          {previewIndex !== null && (
+            <AdvancedImagePreviewModal
+              isOpen={previewIndex !== null}
+              onClose={() => setPreviewIndex(null)}
+              images={converted.map(
+                (img): ModalImageObject => ({ // Map to ModalImageObject
+                  src: img.image_data,
+                  alt: `Preview of ${img.image_name}`,
+                  title: img.image_name,
+                })
+              )}
+              currentIndex={previewIndex}
+              onNavigate={(newIndex) => setPreviewIndex(newIndex)}
+              onApplyEdit={onApplyEdit} // Pass down the prop from App.tsx
+              // No imageOverrideSrc needed here
+            />
+          )}
         </>
       ) : (
         <div className="text-center text-muted-foreground p-8 border rounded-lg">

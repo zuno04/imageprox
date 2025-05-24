@@ -8,6 +8,9 @@ import FileUpload from "./components/FileUpload";
 import ConvertAction from "./components/ConvertAction";
 // Ensure ConvertedImage type is consistently defined or imported if used by ConvertAction too.
 // If ConvertAction also defines/exports it, pick one source of truth.
+// import { ThemeToggle } from "./components/ui/ThemeToggle"; // Removed ThemeToggle import
+import { Header } from "./components/layout/Header"; // Added Header import
+import { Footer } from "./components/layout/Footer"; // Added Footer import
 
 function App() {
   const [imagesToProcess, setImagesToProcess] = useState<File[]>([]);
@@ -15,12 +18,71 @@ function App() {
     []
   );
 
+  const handleApplyEditToConvertedImage = ({
+    newSrc,
+    originalIndex,
+  }: {
+    newSrc: string;
+    originalIndex: number;
+  }) => {
+    setConvertedImages((prevConverted) => {
+      const updatedConverted = [...prevConverted];
+      if (updatedConverted[originalIndex]) {
+        updatedConverted[originalIndex] = {
+          ...updatedConverted[originalIndex],
+          image_data: newSrc,
+          // Optionally, modify the name to indicate it's been edited
+          // image_name: `${updatedConverted[originalIndex].image_name}_edited`
+        };
+      }
+      return updatedConverted;
+    });
+  };
+
+  const handleApplyEditToUploadFile = async ({
+    newSrc,
+    originalIndex,
+  }: {
+    newSrc: string;
+    originalIndex: number;
+  }) => {
+    if (!imagesToProcess[originalIndex]) return;
+
+    const originalFile = imagesToProcess[originalIndex];
+    let newFileName = originalFile.name;
+    // Optionally, modify the name to indicate it's been edited, e.g., prepend "edited_"
+    // Ensure to handle potential name collisions or keep it simple.
+    newFileName = `edited_${originalFile.name}`;
+
+    try {
+      const response = await fetch(newSrc);
+      const blob = await response.blob();
+      const newFile = new File([blob], newFileName, {
+        type: blob.type || originalFile.type, // Use blob's type, fallback to original
+        lastModified: new Date().getTime(),
+      });
+
+      setImagesToProcess((prevFiles) => {
+        const updatedFiles = [...prevFiles];
+        updatedFiles[originalIndex] = newFile;
+        return updatedFiles;
+      });
+    } catch (error) {
+      console.error("Error converting edited image back to File:", error);
+      // Potentially show an error to the user
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col items-center p-4 md:p-8 selection:bg-primary selection:text-primary-foreground">
+    <div className="min-h-screen bg-background text-foreground flex flex-col items-center selection:bg-primary selection:text-primary-foreground">
+      <Header />
       {/* Main container for content */}
-      <div className="container mx-auto max-w-5xl w-full space-y-10">
-        <header className="text-center py-8">
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-primary">
+      <div className="container mx-auto max-w-7xl w-full flex-grow p-4 md:p-8 space-y-10">
+        <header className="text-center py-4 md:py-8 space-y-4">
+          {" "}
+          {/* Removed relative positioning and ThemeToggle div */}
+          {/* ThemeToggle removed from here */}
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-primary">
             Client-Side Image Optimizer
           </h1>
           <p className="mt-3 text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -32,18 +94,23 @@ function App() {
         {/* Main application layout: three columns on larger screens, stacked on smaller */}
         <main className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 items-start">
           {/* Column 1: File Upload */}
-          <section className="bg-card text-card-foreground p-6 rounded-xl shadow-lg lg:sticky lg:top-8 space-y-4">
+          <section className="bg-card text-card-foreground p-6 rounded-lg shadow-lg lg:sticky lg:top-8 space-y-4">
+            {" "}
+            {/* Changed rounded-xl to rounded-lg */}
             <h2 className="text-2xl font-semibold text-center border-b border-border pb-3 mb-4">
               1. Upload Files
             </h2>
             <FileUpload
               setImages={setImagesToProcess}
               setConverted={setConvertedImages}
+              onApplyEdit={handleApplyEditToUploadFile} // Pass the new handler
             />
           </section>
 
           {/* Column 2: Convert Action */}
-          <section className="bg-card text-card-foreground p-6 rounded-xl shadow-lg lg:sticky lg:top-8 space-y-4">
+          <section className="bg-card text-card-foreground p-6 rounded-lg shadow-lg lg:sticky lg:top-8 space-y-4">
+            {" "}
+            {/* Changed rounded-xl to rounded-lg */}
             <h2 className="text-2xl font-semibold text-center border-b border-border pb-3 mb-4">
               2. Process Images
             </h2>
@@ -62,21 +129,22 @@ function App() {
           </section>
 
           {/* Column 3: Download Area */}
-          <section className="bg-card text-card-foreground p-6 rounded-xl shadow-lg lg:sticky lg:top-8 space-y-4">
+          <section className="bg-card text-card-foreground p-6 rounded-lg shadow-lg lg:sticky lg:top-8 space-y-4">
+            {" "}
+            {/* Changed rounded-xl to rounded-lg */}
             <h2 className="text-2xl font-semibold text-center border-b border-border pb-3 mb-4">
               3. Download Results
             </h2>
-            <FileRenderDownload converted={convertedImages} />
+            <FileRenderDownload
+              converted={convertedImages}
+              onApplyEdit={handleApplyEditToConvertedImage} // Pass the handler
+            />
           </section>
         </main>
 
-        <footer className="text-center py-8 mt-10 border-t border-border">
-          <p className="text-sm text-muted-foreground">
-            Image Optimizer © {new Date().getFullYear()}. Built with React,
-            Vite, TypeScript & Shadcn/ui.
-          </p>
-        </footer>
+        {/* Footer removed from here */}
       </div>
+      <Footer /> {/* Added Footer component here */}
     </div>
   );
 }
