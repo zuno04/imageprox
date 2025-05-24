@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from 'react-i18next'; // Import useTranslation
 import imageCompression, { type Options } from "browser-image-compression";
 
 import { Button } from "@/components/ui/button";
@@ -54,6 +55,7 @@ const ConvertAction: React.FC<ConvertActionProps> = ({
 
   const [processing, setProcessing] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useTranslation(); // Initialize useTranslation
 
   const handleMaxSizeChange = (value: string) => {
     const newSize = parseFloat(value);
@@ -72,12 +74,12 @@ const ConvertAction: React.FC<ConvertActionProps> = ({
   const convertBlobToBase64 = (blob: Blob): Promise<string> =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onerror = () => reject(new Error("Failed to read blob."));
+      reader.onerror = () => reject(new Error(t('convertAction.errorFailedToReadBlob'))); // Translated
       reader.onload = () => {
         if (typeof reader.result === "string") {
           resolve(reader.result);
         } else {
-          reject(new Error("Unexpected result format."));
+          reject(new Error(t('convertAction.errorUnexpectedResultFormat'))); // Translated
         }
       };
 
@@ -113,17 +115,17 @@ const ConvertAction: React.FC<ConvertActionProps> = ({
       for (const file of imageFiles) {
         const compressed = await imageCompression(file, options);
         const base64 = await convertBlobToBase64(compressed);
-        let filename = `Reduced_${file.name}`;
+        let filename = t('convertAction.reducedFileNamePrefix') + file.name;
         if (outputFormat !== "original") {
           const ext = outputFormat.split("/")[1];
-          filename = `Reduced_${file.name.replace(/\.[^/.]+$/, "")}.${ext}`;
+          filename = t('convertAction.reducedFileNamePrefix') + file.name.replace(/\.[^/.]+$/, "") + `.${ext}`;
         }
         results.push({ image_name: filename, image_data: base64 });
       }
       return results;
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Unknown error.";
-      setError(`Compression failed: ${message}`);
+      const message = err instanceof Error ? err.message : t('convertAction.errorUnknown'); // Translated
+      setError(t('convertAction.compressionFailed', { message })); // Translated
       return undefined;
     }
   };
@@ -141,12 +143,12 @@ const ConvertAction: React.FC<ConvertActionProps> = ({
       {!processing ? (
         <>
           <div className="text-center text-lg font-semibold">
-            Upload your images, reduce their size, and download them!
+            {t('convertAction.title')}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 w-full">
             <div className="space-y-2">
-              <Label htmlFor="maxSizeMB">Max Size (MB)</Label>
+              <Label htmlFor="maxSizeMB">{t('convertAction.maxSizeLabel')}</Label>
               <Input
                 id="maxSizeMB"
                 type="number"
@@ -158,7 +160,7 @@ const ConvertAction: React.FC<ConvertActionProps> = ({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="maxWidthOrHeight">Max W/H (px)</Label>
+              <Label htmlFor="maxWidthOrHeight">{t('convertAction.maxDimensionLabel')}</Label>
               <Input
                 id="maxWidthOrHeight"
                 type="number"
@@ -170,7 +172,7 @@ const ConvertAction: React.FC<ConvertActionProps> = ({
               />
             </div>
             <div className="space-y-2">
-              <Label>Output Format</Label>
+              <Label>{t('convertAction.outputFormatLabel')}</Label>
               <Select
                 value={outputFormat}
                 onValueChange={(val) => {
@@ -179,26 +181,25 @@ const ConvertAction: React.FC<ConvertActionProps> = ({
                 }}
               >
                 <SelectTrigger className="w-full min-w-[100px]">
-                  <SelectValue placeholder="Select format" />
+                  <SelectValue placeholder={t('convertAction.selectFormatPlaceholder')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="original">Keep Original</SelectItem>
-                  <SelectItem value="image/png">PNG</SelectItem>
-                  <SelectItem value="image/jpeg">JPG</SelectItem>
-                  <SelectItem value="image/webp">WEBP</SelectItem>
+                  <SelectItem value="original">{t('convertAction.formatOriginal')}</SelectItem>
+                  <SelectItem value="image/png">{t('convertAction.formatPng')}</SelectItem>
+                  <SelectItem value="image/jpeg">{t('convertAction.formatJpg')}</SelectItem>
+                  <SelectItem value="image/webp">{t('convertAction.formatWebp')}</SelectItem>
                 </SelectContent>
               </Select>
               {outputFormat === "image/webp" && (
                 <p className="text-xs text-muted-foreground">
-                  WEBP offers better compression but may not be supported by all
-                  devices.
+                  {t('convertAction.webpWarning')}
                 </p>
               )}
             </div>
           </div>
 
           <div className="w-full px-4">
-            <Label>Compression Mode</Label>
+            <Label>{t('convertAction.compressionModeLabel')}</Label>
             <RadioGroup
               value={compressionMode}
               onValueChange={(val) => {
@@ -209,11 +210,11 @@ const ConvertAction: React.FC<ConvertActionProps> = ({
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="lossy" id="lossy" />
-                <Label htmlFor="lossy">Aggressive (Smaller Size)</Label>
+                <Label htmlFor="lossy">{t('convertAction.modeAggressive')}</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="high" id="high" />
-                <Label htmlFor="high">High Quality (Larger Size)</Label>
+                <Label htmlFor="high">{t('convertAction.modeHighQuality')}</Label>
               </div>
             </RadioGroup>
           </div>
@@ -228,7 +229,7 @@ const ConvertAction: React.FC<ConvertActionProps> = ({
               }}
             />
             <Label htmlFor="keepExif">
-              Keep EXIF Data (camera, GPS). Applies to JPEGs. May increase size.
+              {t('convertAction.keepExifLabel')}
             </Label>
           </div>
 
@@ -237,7 +238,7 @@ const ConvertAction: React.FC<ConvertActionProps> = ({
             disabled={images.length === 0 || processing}
             className="w-full md:w-auto"
           >
-            Process Images {images.length > 0 ? `(${images.length})` : ""}
+            {t('convertAction.processButton', { count: images.length })}
           </Button>
 
           {error && <p className="text-sm text-destructive">{error}</p>}
@@ -245,7 +246,7 @@ const ConvertAction: React.FC<ConvertActionProps> = ({
       ) : (
         <div className="flex flex-col items-center space-y-2">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="text-sm text-muted-foreground">Processing images...</p>
+          <p className="text-sm text-muted-foreground">{t('convertAction.processingMessage')}</p>
         </div>
       )}
     </div>

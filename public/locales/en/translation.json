@@ -1,0 +1,57 @@
+{
+  "greeting": "Hello!",
+  "languageName": "English",
+  "header": {
+    "title": "ImageProx"
+  },
+  "footer": {
+    "copyright": "ImageProx © {{year}}. Built with React, Vite, TypeScript & Shadcn/ui.",
+    "sendFeedback": "Send Feedback",
+    "githubProfile": "GitHub Profile"
+  },
+  "fileUpload": {
+    "cardTitle": "Upload Files",
+    "clickToUpload": "Click to upload",
+    "dragAndDrop": "or drag and drop",
+    "imageTypes": "Images (PNG, JPG, GIF, WEBP etc.)",
+    "selectedFiles_zero": "Selected files (0):",
+    "selectedFiles_one": "Selected file ({{count}}):",
+    "selectedFiles_other": "Selected files ({{count}}):",
+    "previewAlt": "Preview of {{fileName}}",
+    "previewTitle": "Preview {{fileName}}",
+    "removeTitle": "Remove {{fileName}}"
+  },
+  "convertAction": {
+    "cardTitle": "Process Images",
+    "upladImages": "Upload some images to start processing.",
+    "title": "Your Image Optimizer",
+    "subTitle": "Upload your images, reduce their size directly in your browser, and download them individually or as a ZIP!",
+    "maxSizeLabel": "Max Size (MB)",
+    "maxDimensionLabel": "Max W/H (px)",
+    "outputFormatLabel": "Output Format",
+    "selectFormatPlaceholder": "Select format",
+    "formatOriginal": "Keep Original",
+    "formatPng": "PNG",
+    "formatJpg": "JPG",
+    "formatWebp": "WEBP",
+    "webpWarning": "WEBP offers better compression but may not be supported by all devices.",
+    "compressionModeLabel": "Compression Mode",
+    "modeAggressive": "Aggressive (Smaller Size)",
+    "modeHighQuality": "High Quality (Larger Size)",
+    "keepExifLabel": "Keep EXIF Data (camera, GPS). Applies to JPEGs. May increase size.",
+    "processButton_zero": "Process Images",
+    "processButton_one": "Process Image ({{count}})",
+    "processButton_other": "Process Images ({{count}})",
+    "compressionFailed": "Compression failed: {{message}}",
+    "processingMessage": "Processing images...",
+    "errorFailedToReadBlob": "Failed to read blob.",
+    "errorUnexpectedResultFormat": "Unexpected result format.",
+    "errorUnknown": "Unknown error.",
+    "reducedFileNamePrefix": "Reduced_"
+  },
+  "downloadResults": {
+    "cardTitle": "Download Results",
+    "noDownload": "No converted images to display or download yet.",
+    "processFirst": "Process some images first!"
+  }
+}
