@@ -1,5 +1,6 @@
 // src/components/modals/AdvancedImagePreviewModal.tsx
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { X, ZoomIn, ZoomOut, RotateCw, RotateCcw, Download as DownloadIcon, ChevronLeft, ChevronRight, Palette, Save } from 'lucide-react'; // Added Save
 import { Button } from '@/components/ui/button';
 import { saveToLocalStorage, loadFromLocalStorage } from '@/lib/utils';
@@ -209,11 +210,11 @@ const AdvancedImagePreviewModal: React.FC<AdvancedImagePreviewModalProps> = ({
     return null;
   }
 
-  return (
-    <div 
+  const modalContent = (
+    <div
       className={`fixed inset-0 z-50 flex items-center justify-center p-0 transition-opacity duration-300 ease-in-out ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-      aria-labelledby="image-preview-title" 
-      role="dialog" 
+      aria-labelledby="image-preview-title"
+      role="dialog"
       aria-modal="true"
     >
       <div className={`absolute inset-0 bg-black/90 transition-opacity duration-300 ease-in-out ${isOpen ? 'opacity-100' : 'opacity-0'}`} onClick={onClose} />
@@ -246,7 +247,7 @@ const AdvancedImagePreviewModal: React.FC<AdvancedImagePreviewModalProps> = ({
 
       <div className={`relative z-10 w-full h-full flex flex-col text-white p-2 sm:p-4 transition-all duration-300 ease-in-out ${isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}>
         <div className="flex items-center justify-between p-3 sm:p-4 bg-black/60 backdrop-blur-sm rounded-t-lg">
-          <div className="flex-1 min-w-0"> 
+          <div className="flex-1 min-w-0">
             <h2 id="image-preview-title" className="text-base sm:text-lg font-semibold truncate" title={currentImage.title}>
               {currentImage.title}
             </h2>
@@ -261,19 +262,19 @@ const AdvancedImagePreviewModal: React.FC<AdvancedImagePreviewModalProps> = ({
             <Button variant="ghost" size="icon" onClick={handleEditRotate} title="Rotate Edit (90° CW)"> <RotateCcw size={20} /> </Button>
             <Button variant="ghost" size="icon" onClick={handleEditGrayscale} title="Grayscale"> <Palette size={20} /> </Button>
             {onApplyEdit && (
-              <Button 
-                variant="ghost" 
-                size="icon" 
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={() => {
                   if (editedImageData) {
                     onApplyEdit({ newSrc: editedImageData, originalIndex: currentIndex });
                     setEditedImageData(null); // Clear edit after applying
                   }
-                }} 
-                disabled={!editedImageData} 
+                }}
+                disabled={!editedImageData}
                 title="Apply Edits to List"
-              > 
-                <Save size={20} /> 
+              >
+                <Save size={20} />
               </Button>
             )}
             <Button variant="ghost" size="icon" onClick={handleDownload} title="Download" disabled={!displaySrc}> <DownloadIcon size={20} /> </Button>
@@ -294,13 +295,24 @@ const AdvancedImagePreviewModal: React.FC<AdvancedImagePreviewModalProps> = ({
             <div className="text-gray-400">Loading image...</div> // Fallback if src is not ready
           )}
         </div>
-        
+
         <div className="p-2 text-center bg-black/60 backdrop-blur-sm rounded-b-lg text-xs text-gray-300">
             Use Esc, Left/Right Arrows. Mouse wheel to zoom. Zoom & Rotate controls available. {/* Updated hint */}
         </div>
       </div>
     </div>
   );
+
+  // Ensure modalRoot is not null before calling createPortal
+  const modalRootElement = document.getElementById('modal-root');
+  if (!modalRootElement) {
+    // This case should ideally not happen if index.html is set up correctly
+    // Or, you could dynamically create and append modal-root here as a fallback
+    console.error("Modal root element #modal-root not found in the DOM.");
+    return null; // Or render the modal directly without portal as a fallback
+  }
+
+  return createPortal(modalContent, modalRootElement);
 };
 
 export default AdvancedImagePreviewModal;

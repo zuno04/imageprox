@@ -95,12 +95,18 @@ const ConvertAction: React.FC<ConvertActionProps> = ({
       maxWidthOrHeight,
       useWebWorker: true,
       preserveExif: keepExif,
-      initialQuality: compressionMode === "high" ? 1.0 : 0.8,
-      alwaysKeepResolution: compressionMode === "high",
     };
 
-    if (outputFormat !== "original") {
-      options.fileType = outputFormat;
+    if (outputFormat === 'image/png') {
+      // For PNG, don't set initialQuality or alwaysKeepResolution
+      options.fileType = 'image/png';
+    } else {
+      // For other formats, apply existing logic
+      options.initialQuality = compressionMode === "high" ? 1.0 : 0.8;
+      options.alwaysKeepResolution = compressionMode === "high";
+      if (outputFormat !== "original") {
+        options.fileType = outputFormat;
+      }
     }
 
     try {
