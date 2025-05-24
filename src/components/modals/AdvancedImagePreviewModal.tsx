@@ -1,24 +1,29 @@
 // src/components/modals/AdvancedImagePreviewModal.tsx
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { X, ZoomIn, ZoomOut, RotateCw, RotateCcw, Download as DownloadIcon, ChevronLeft, ChevronRight, Palette, Save } from 'lucide-react'; // Added Save
+import { X, ZoomIn, ZoomOut, RotateCw, RotateCcw, Download as DownloadIcon, ChevronLeft, ChevronRight, Palette, Save, Columns, LayoutPanelSide } from 'lucide-react'; // Added Save, Columns, LayoutPanelSide
 import { Button } from '@/components/ui/button';
 import { saveToLocalStorage, loadFromLocalStorage } from '@/lib/utils';
+import { ReactCompareSlider, ReactCompareSliderImage } from 'react-compare-slider';
 
-export interface ImageObject { // Exporting for use in parent components
-  src: string; // Can be data URL or placeholder for dynamic loading
+
+export interface ModalImageDisplayInfo {
+  originalSrc: string; // Data URL or object URL of the original image
+  processedSrc?: string; // Data URL of the processed image (if available)
   alt: string;
   title: string;
+  originalSize?: number; // Original file size in bytes
+  processedSize?: number; // Processed file size in bytes
 }
 
 interface AdvancedImagePreviewModalProps {
   isOpen: boolean;
   onClose: () => void;
-  images: ImageObject[]; // Array of all images
-  currentIndex: number; 
-  onNavigate: (newIndex: number) => void; 
-  imageOverrideSrc?: string; 
-  onApplyEdit?: (editedImage: { newSrc: string; originalIndex: number }) => void; // New prop
+  images: ModalImageDisplayInfo[]; // Array of all images
+  currentIndex: number;
+  onNavigate: (newIndex: number) => void;
+  // imageOverrideSrc is effectively handled by originalSrc/processedSrc distinction
+  onApplyEdit?: (editedImage: { newSrc: string; originalIndex: number }) => void; // newSrc would be new processedSrc
 }
 
 const AdvancedImagePreviewModal: React.FC<AdvancedImagePreviewModalProps> = ({
@@ -27,8 +32,8 @@ const AdvancedImagePreviewModal: React.FC<AdvancedImagePreviewModalProps> = ({
   images,
   currentIndex,
   onNavigate,
-  imageOverrideSrc,
-  onApplyEdit, // Destructure new prop
+  // imageOverrideSrc, // Removed
+  onApplyEdit,
 }) => {
   const LOCAL_STORAGE_ZOOM_KEY = 'advancedPreviewZoom';
   const initialZoom = loadFromLocalStorage<number>(LOCAL_STORAGE_ZOOM_KEY) || 1;
@@ -38,9 +43,58 @@ const AdvancedImagePreviewModal: React.FC<AdvancedImagePreviewModalProps> = ({
   const [editedImageData, setEditedImageData] = useState<string | null>(null); // For canvas edited image
   const imageContainerRef = useRef<HTMLDivElement>(null);
 
+  // State for comparison view
+  const [showComparison, setShowComparison] = useState<boolean>(true);
+  const [comparisonMode, setComparisonMode] = useState<"sideBySide" | "slider">(
+    "sideBySide"
+  );
+
   const currentImage = images[currentIndex];
-  // Prioritize editedImageData, then imageOverrideSrc, then original src
-  const displaySrc = editedImageData || imageOverrideSrc || currentImage?.src;
+  // Prioritize editedImageData, then processedSrc, then original src
+  // displaySrc will be used for the main image when not in comparison mode, or for editing.
+  const displaySrc = editedImageData || currentImage?.processedSrc || currentImage?.originalSrc;
+
+  const handleToggleComparison = () => {
+    setShowComparison(!showComparison);
+  };
+
+  const handleSetComparisonMode = (mode: "sideBySide" | "slider") => {
+    setComparisonMode(mode);
+    if (!showComparison && (currentImage?.processedSrc && currentImage?.originalSrc !== currentImage?.processedSrc) ) {
+      setShowComparison(true); // Automatically enable comparison when a mode is chosen, if there's something to compare
+    }
+  };
+
+  const calculateSizeSavings = () => {
+    if (
+      currentImage &&
+      currentImage.originalSize &&
+      currentImage.processedSize &&
+      currentImage.processedSrc && // Ensure there is a processed image
+      currentImage.originalSrc !== currentImage.processedSrc // Ensure they are different
+    ) {
+      const saved = currentImage.originalSize - currentImage.processedSize;
+      if (currentImage.originalSize === 0 && saved <= 0) return null; // Avoid division by zero or showing savings for 0-byte files if not smaller
+
+      const percentageSaved = saved !== 0 && currentImage.originalSize !== 0 ? (saved / currentImage.originalSize) * 100 : 0;
+      
+      if (saved < 0) {
+        return (
+          <p className="text-xs text-red-400 whitespace-nowrap">
+            Size Increased: {(-saved / 1024).toFixed(1)} KB (
+            {(-percentageSaved).toFixed(0)}%)
+          </p>
+        );
+      }
+      return (
+        <p className="text-xs text-green-400 whitespace-nowrap">
+          Saved: {(saved / 1024).toFixed(1)} KB ({percentageSaved.toFixed(0)}%)
+        </p>
+      );
+    }
+    return null;
+  };
+
 
   const updateZoom = useCallback((newZoom: number) => {
     const clampedZoom = Math.max(0.5, Math.min(newZoom, 3));
@@ -282,22 +336,79 @@ const AdvancedImagePreviewModal: React.FC<AdvancedImagePreviewModalProps> = ({
           </div>
         </div>
 
-        <div ref={imageContainerRef} className="flex-1 flex items-center justify-center overflow-hidden p-2 sm:p-4"> {/* Added ref */}
-          {displaySrc ? (
-            <img
-              src={displaySrc}
-              alt={currentImage.alt}
+        <div ref={imageContainerRef} className="flex-1 flex items-center justify-center overflow-hidden p-1 sm:p-2">
+          {isEditing && (editedImageData || displaySrc) ? (
+            // Editing UI (using Cropper or similar - current code uses canvas operations)
+            // For now, editing just shows the 'displaySrc' which would be based on editedImageData
+             <img
+              src={editedImageData || displaySrc} // Show edited or fallback to displaySrc for editing
+              alt={`Editing ${currentImage.alt}`}
               className="max-w-full max-h-full object-contain transition-transform duration-200 ease-in-out select-none"
               style={{ transform: `scale(${zoom}) rotate(${rotation}deg)` }}
               draggable="false"
             />
+          ) : showComparison && currentImage.processedSrc && currentImage.originalSrc !== currentImage.processedSrc ? (
+            // Comparison View
+            comparisonMode === "sideBySide" ? (
+              <div className="flex w-full h-full items-center justify-center">
+                <div className="w-1/2 h-full p-1 border-r border-gray-700 flex flex-col items-center justify-center">
+                  <img
+                    src={currentImage.originalSrc}
+                    alt={`Original - ${currentImage.alt}`}
+                    className="max-w-full max-h-[90%] object-contain" // Adjusted max-h
+                    style={{ transform: `scale(${zoom}) rotate(${rotation}deg)` }}
+                  />
+                  <p className="text-center text-xs mt-1 text-gray-300">Before</p>
+                </div>
+                <div className="w-1/2 h-full p-1 flex flex-col items-center justify-center">
+                  <img
+                    src={currentImage.processedSrc} // Already checked that processedSrc exists
+                    alt={`Processed - ${currentImage.alt}`}
+                    className="max-w-full max-h-[90%] object-contain" // Adjusted max-h
+                    style={{ transform: `scale(${zoom}) rotate(${rotation}deg)` }}
+                  />
+                  <p className="text-center text-xs mt-1 text-gray-300">After</p>
+                </div>
+              </div>
+            ) : ( // Slider mode
+              <ReactCompareSlider
+                itemOne={
+                  <ReactCompareSliderImage
+                    src={currentImage.originalSrc}
+                    alt={`Original - ${currentImage.alt}`}
+                    style={{ objectFit: "contain", maxHeight: "100%" }}
+                  />
+                }
+                itemTwo={
+                  <ReactCompareSliderImage
+                    src={currentImage.processedSrc} // Already checked that processedSrc exists
+                    alt={`Processed - ${currentImage.alt}`}
+                    style={{ objectFit: "contain", maxHeight: "100%" }}
+                  />
+                }
+                className="w-full h-full"
+                style={{ transform: `scale(${zoom}) rotate(${rotation}deg)` }} // Apply zoom/rotation to slider container
+              />
+            )
           ) : (
-            <div className="text-gray-400">Loading image...</div> // Fallback if src is not ready
+            // Default View (processed or original if no processing, or if comparison is off)
+            displaySrc ? (
+              <img
+                src={displaySrc}
+                alt={currentImage.alt}
+                className="max-w-full max-h-full object-contain transition-transform duration-200 ease-in-out select-none"
+                style={{ transform: `scale(${zoom}) rotate(${rotation}deg)` }}
+                draggable="false"
+              />
+            ) : (
+              <div className="text-gray-400">Loading image...</div>
+            )
           )}
         </div>
 
-        <div className="p-2 text-center bg-black/60 backdrop-blur-sm rounded-b-lg text-xs text-gray-300">
-            Use Esc, Left/Right Arrows. Mouse wheel to zoom. Zoom & Rotate controls available. {/* Updated hint */}
+        <div className="p-2 text-center bg-black/60 backdrop-blur-sm rounded-b-lg text-xs text-gray-300 flex flex-col items-center space-y-1">
+           <div>{calculateSizeSavings()}</div>
+           <div>Use Esc, Left/Right Arrows. Mouse wheel to zoom. Controls available.</div>
         </div>
       </div>
     </div>

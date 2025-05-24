@@ -1,9 +1,11 @@
-import React, { useState } from "react"; 
+import React, { useState } from "react";
 
-import { Button } from "@/components/ui/button"; 
-import { Download, FileText, Eye } from "lucide-react"; 
+import { Button } from "@/components/ui/button";
+import { Download, FileText, Eye } from "lucide-react";
 import { generateZip } from "@/lib/jzip";
-import AdvancedImagePreviewModal, { type ImageObject as ModalImageObject } from '@/components/modals/AdvancedImagePreviewModal'; // Import type
+import AdvancedImagePreviewModal, {
+  type ModalImageDisplayInfo,
+} from "@/components/modals/AdvancedImagePreviewModal"; // Updated import
 
 // Assuming ConvertedImage type is defined elsewhere (e.g., in ConvertAction.tsx or a shared types file)
 // If not, define it here or import it:
@@ -101,16 +103,24 @@ const FileRenderDownload: React.FC<FileRenderDownloadProps> = ({
               isOpen={previewIndex !== null}
               onClose={() => setPreviewIndex(null)}
               images={converted.map(
-                (img): ModalImageObject => ({ // Map to ModalImageObject
-                  src: img.image_data,
-                  alt: `Preview of ${img.image_name}`,
-                  title: img.image_name,
-                })
+                (img): ModalImageDisplayInfo => {
+                  // For FileRenderDownload, if original details aren't passed,
+                  // we use processed for both, and comparison won't show a diff.
+                  // Size approximation from base64 length (very rough)
+                  const approxSize = img.image_data.length * (3 / 4); // Base64 string length to approximate byte size
+                  return {
+                    originalSrc: img.image_data,
+                    processedSrc: img.image_data,
+                    alt: `Preview of ${img.image_name}`,
+                    title: img.image_name,
+                    originalSize: approxSize,
+                    processedSize: approxSize,
+                  };
+                }
               )}
               currentIndex={previewIndex}
               onNavigate={(newIndex) => setPreviewIndex(newIndex)}
-              onApplyEdit={onApplyEdit} // Pass down the prop from App.tsx
-              // No imageOverrideSrc needed here
+              onApplyEdit={onApplyEdit}
             />
           )}
         </>

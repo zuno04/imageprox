@@ -11,12 +11,37 @@ import ConvertAction from "./components/ConvertAction";
 // import { ThemeToggle } from "./components/ui/ThemeToggle"; // Removed ThemeToggle import
 import { Header } from "./components/layout/Header"; // Added Header import
 import { Footer } from "./components/layout/Footer"; // Added Footer import
+import CloudUploadActions from "./components/CloudUploadActions"; // Import CloudUploadActions
 
 function App() {
   const [imagesToProcess, setImagesToProcess] = useState<File[]>([]);
   const [convertedImages, setConvertedImages] = useState<ConvertedImageType[]>(
     []
   );
+  const [
+    previousConvertedImagesState,
+    setPreviousConvertedImagesState,
+  ] = useState<ConvertedImageType[] | null>(null);
+
+  const handleSetConvertedWithHistory = (
+    newlyProcessedImages: ConvertedImageType[]
+  ) => {
+    setPreviousConvertedImagesState(convertedImages); // Save current state before updating
+    setConvertedImages(newlyProcessedImages);
+  };
+
+  const handleUndoConversion = () => {
+    if (previousConvertedImagesState !== null) {
+      setConvertedImages(previousConvertedImagesState);
+      setPreviousConvertedImagesState(null); // Only one level of undo
+    }
+  };
+
+  const handleNewFileUpload = (newFiles: File[]) => {
+    setImagesToProcess(newFiles);
+    setConvertedImages([]); // Clear converted images
+    setPreviousConvertedImagesState(null); // Clear undo history
+  };
 
   const handleApplyEditToConvertedImage = ({
     newSrc,
@@ -101,9 +126,10 @@ function App() {
               1. Upload Files
             </h2>
             <FileUpload
-              setImages={setImagesToProcess}
-              setConverted={setConvertedImages}
-              onApplyEdit={handleApplyEditToUploadFile} // Pass the new handler
+              setImages={handleNewFileUpload} // Use the new handler
+              // setConverted is not directly called by FileUpload for new uploads in a way that affects history here
+              // FileUpload calls setConverted([]) directly, which is fine.
+              onApplyEdit={handleApplyEditToUploadFile}
             />
           </section>
 
@@ -117,7 +143,9 @@ function App() {
             {imagesToProcess.length > 0 ? (
               <ConvertAction
                 images={imagesToProcess}
-                setConverted={setConvertedImages}
+                setConverted={handleSetConvertedWithHistory} // Use the history-aware handler
+                onUndo={handleUndoConversion}
+                canUndo={previousConvertedImagesState !== null}
               />
             ) : (
               <div className="text-center py-10">
@@ -141,6 +169,13 @@ function App() {
             />
           </section>
         </main>
+
+        {/* Section 4: Cloud Upload Actions */}
+        {convertedImages.length > 0 && (
+          <section className="mt-10">
+            <CloudUploadActions convertedImages={convertedImages} />
+          </section>
+        )}
 
         {/* Footer removed from here */}
       </div>
