@@ -1,0 +1,20 @@
+{
+  "name": "ImageProx - Image Optimizer",
+  "short_name": "ImageProx",
+  "description": "Privacy-first, client-side browser-based image optimization tool",
+  "theme_color": "#1a1a2e",
+  "background_color": "#1a1a2e",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["utilities", "photo"]
+}

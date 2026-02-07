@@ -19,11 +19,14 @@
     "selectedFiles_other": "Fichiers sélectionnés ({{count}}) :",
     "previewAlt": "Aperçu de {{fileName}}",
     "previewTitle": "Aperçu {{fileName}}",
-    "removeTitle": "Supprimer {{fileName}}"
+    "removeTitle": "Supprimer {{fileName}}",
+    "pasteHint": "ou collez depuis le presse-papiers (Ctrl+V)",
+    "dropzoneActive": "Déposez les fichiers ici...",
+    "urlImport": "Importer depuis une URL"
   },
   "convertAction": {
     "cardTitle": "Traiter les images",
-    "upladImages": "Téléversez des images pour commencer le traitement.",
+    "uploadImages": "Téléversez des images pour commencer le traitement.",
     "title": "Votre Optimiseur d'images",
     "subTitle": "Téléchargez vos images, réduisez leur taille directement dans votre navigateur et téléchargez-les individuellement ou en ZIP !",
     "maxSizeLabel": "Taille max (Mo)",
@@ -34,7 +37,10 @@
     "formatPng": "PNG",
     "formatJpg": "JPG",
     "formatWebp": "WEBP",
+    "formatAvif": "AVIF",
     "webpWarning": "WEBP offre une meilleure compression mais peut ne pas être pris en charge par tous les appareils.",
+    "avifWarning": "AVIF offre une excellente compression mais a un support navigateur limité.",
+    "avifNotSupported": "AVIF n'est pas supporté dans votre navigateur. Utilisation de WebP à la place.",
     "compressionModeLabel": "Mode de compression",
     "modeAggressive": "Agressive (plus petite taille)",
     "modeHighQuality": "Haute qualité (plus grande taille)",
@@ -47,11 +53,159 @@
     "errorFailedToReadBlob": "Échec de la lecture du blob.",
     "errorUnexpectedResultFormat": "Format de résultat inattendu.",
     "errorUnknown": "Erreur inconnue.",
-    "reducedFileNamePrefix": "Réduit_"
+    "reducedFileNamePrefix": "Réduit_",
+    "previewMode": "Mode aperçu",
+    "livePreview": "Aperçu en direct"
   },
   "downloadResults": {
     "cardTitle": "Télécharger les résultats",
     "noDownload": "Aucune image convertie à afficher ou à télécharger pour le moment.",
-    "processFirst": "Traitez d'abord quelques images !"
+    "processFirst": "Traitez d'abord quelques images !",
+    "convertedFiles": "Fichiers convertis",
+    "downloadAllZip": "Télécharger tout en ZIP",
+    "downloadTitle": "Télécharger {{fileName}}",
+    "previewTitle": "Aperçu {{fileName}}",
+    "sizeSaved": "Économisé {{percent}}%",
+    "originalSize": "Original : {{size}}",
+    "compressedSize": "Compressé : {{size}}"
+  },
+  "presets": {
+    "title": "Préréglages rapides",
+    "web": "Web",
+    "webDesc": "Optimisé pour les pages web (max 500Ko, 1920px)",
+    "email": "Email",
+    "emailDesc": "Petits fichiers pour les pièces jointes (max 200Ko, 1024px)",
+    "socialMedia": "Réseaux sociaux",
+    "socialMediaDesc": "Parfait pour les plateformes sociales (max 1Mo, 2048px)",
+    "thumbnail": "Miniature",
+    "thumbnailDesc": "Petites images d'aperçu (max 50Ko, 300px)",
+    "print": "Impression",
+    "printDesc": "Haute qualité pour l'impression (max 10Mo, 4096px)",
+    "custom": "Personnalisé",
+    "customDesc": "Vos paramètres personnalisés"
+  },
+  "comparison": {
+    "title": "Comparaison Avant/Après",
+    "before": "Avant",
+    "after": "Après",
+    "toggle": "Basculer la vue de comparaison"
+  },
+  "editor": {
+    "title": "Éditeur d'image",
+    "crop": "Recadrer",
+    "rotate": "Pivoter",
+    "brightness": "Luminosité",
+    "contrast": "Contraste",
+    "saturation": "Saturation",
+    "sharpness": "Netteté",
+    "blur": "Flou",
+    "reset": "Réinitialiser",
+    "apply": "Appliquer",
+    "cancel": "Annuler"
+  },
+  "progress": {
+    "processing": "Traitement de {{current}} sur {{total}}...",
+    "completed": "{{count}} images terminées",
+    "failed": "Échec du traitement de {{count}} images",
+    "pending": "En attente",
+    "error": "Erreur"
+  },
+  "toast": {
+    "processingStarted": "Traitement de {{count}} images...",
+    "processingComplete": "{{count}} images traitées avec succès !",
+    "processingError": "Échec du traitement de certaines images",
+    "downloadStarted": "Préparation du téléchargement...",
+    "downloadComplete": "Téléchargement prêt !",
+    "copySuccess": "Copié dans le presse-papiers !",
+    "copyError": "Échec de la copie dans le presse-papiers",
+    "importSuccess": "{{count}} images importées avec succès"
+  },
+  "shortcuts": {
+    "title": "Raccourcis clavier",
+    "openFiles": "Ouvrir des fichiers",
+    "processImages": "Traiter les images",
+    "downloadAll": "Tout télécharger",
+    "selectAll": "Tout sélectionner",
+    "deselectAll": "Tout désélectionner",
+    "deleteSelected": "Supprimer la sélection",
+    "toggleView": "Basculer le mode d'affichage",
+    "showShortcuts": "Afficher les raccourcis",
+    "escape": "Fermer le dialogue/modal",
+    "navigate": "Naviguer entre les images"
+  },
+  "stats": {
+    "title": "Statistiques de session",
+    "filesProcessed": "Fichiers traités",
+    "totalSaved": "Total économisé",
+    "avgCompression": "Compression moy.",
+    "originalSize": "Taille originale",
+    "compressedSize": "Taille compressée",
+    "compressionRatio": "Taux de compression"
+  },
+  "history": {
+    "title": "Historique de traitement",
+    "noHistory": "Aucun historique de traitement",
+    "clearHistory": "Effacer l'historique",
+    "restore": "Restaurer les paramètres"
+  },
+  "rename": {
+    "title": "Renommage en masse",
+    "pattern": "Modèle de renommage",
+    "preview": "Aperçu",
+    "tokens": "Jetons disponibles",
+    "startIndex": "Index de départ",
+    "apply": "Appliquer le renommage"
+  },
+  "responsive": {
+    "title": "Images responsives",
+    "sizes": "Tailles de sortie",
+    "generate": "Générer toutes les tailles",
+    "srcsetHint": "Extrait HTML srcset inclus",
+    "downloadAll": "Télécharger toutes les tailles"
+  },
+  "gallery": {
+    "viewList": "Vue liste",
+    "viewGrid": "Vue grille",
+    "selectAll": "Tout sélectionner",
+    "deselectAll": "Tout désélectionner",
+    "deleteSelected": "Supprimer la sélection",
+    "selected": "{{count}} sélectionné(s)"
+  },
+  "dropzone": {
+    "dragActive": "Déposez les fichiers ici...",
+    "dragInactive": "Glissez-déposez les fichiers ici",
+    "pasteSupport": "Vous pouvez aussi coller des images (Ctrl+V)",
+    "maxFiles": "Maximum {{count}} fichiers"
+  },
+  "urlImport": {
+    "title": "Importer depuis une URL",
+    "placeholder": "Entrez l'URL de l'image",
+    "import": "Importer",
+    "error": "Échec de l'importation de l'image depuis l'URL",
+    "corsWarning": "Certaines URLs peuvent ne pas fonctionner en raison des restrictions CORS"
+  },
+  "ai": {
+    "formatSuggestion": "Format suggéré",
+    "formatReason": "Basé sur l'analyse de l'image",
+    "qualitySuggestion": "Qualité suggérée",
+    "qualityReason": "Basé sur le type de contenu",
+    "photographic": "Contenu photographique détecté",
+    "graphic": "Graphique/illustration détecté"
+  },
+  "pwa": {
+    "installPrompt": "Installer ImageProx",
+    "installDescription": "Installer pour une utilisation hors ligne et un accès plus rapide",
+    "install": "Installer",
+    "dismiss": "Pas maintenant"
+  },
+  "cropper": {
+    "title": "Recadrer l'image",
+    "aspectRatio": "Ratio d'aspect",
+    "freeform": "Libre",
+    "square": "Carré (1:1)",
+    "landscape": "Paysage (16:9)",
+    "portrait": "Portrait (9:16)",
+    "photo": "Photo (4:3)",
+    "classic": "Classique (3:2)"
   }
 }

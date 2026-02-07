@@ -19,11 +19,14 @@
     "selectedFiles_other": "Selected files ({{count}}):",
     "previewAlt": "Preview of {{fileName}}",
     "previewTitle": "Preview {{fileName}}",
-    "removeTitle": "Remove {{fileName}}"
+    "removeTitle": "Remove {{fileName}}",
+    "pasteHint": "or paste from clipboard (Ctrl+V)",
+    "dropzoneActive": "Drop files here...",
+    "urlImport": "Import from URL"
   },
   "convertAction": {
     "cardTitle": "Process Images",
-    "upladImages": "Upload some images to start processing.",
+    "uploadImages": "Upload some images to start processing.",
     "title": "Your Image Optimizer",
     "subTitle": "Upload your images, reduce their size directly in your browser, and download them individually or as a ZIP!",
     "maxSizeLabel": "Max Size (MB)",
@@ -34,7 +37,10 @@
     "formatPng": "PNG",
     "formatJpg": "JPG",
     "formatWebp": "WEBP",
+    "formatAvif": "AVIF",
     "webpWarning": "WEBP offers better compression but may not be supported by all devices.",
+    "avifWarning": "AVIF offers excellent compression but has limited browser support.",
+    "avifNotSupported": "AVIF is not supported in your browser. Using WebP instead.",
     "compressionModeLabel": "Compression Mode",
     "modeAggressive": "Aggressive (Smaller Size)",
     "modeHighQuality": "High Quality (Larger Size)",
@@ -47,11 +53,159 @@
     "errorFailedToReadBlob": "Failed to read blob.",
     "errorUnexpectedResultFormat": "Unexpected result format.",
     "errorUnknown": "Unknown error.",
-    "reducedFileNamePrefix": "Reduced_"
+    "reducedFileNamePrefix": "Reduced_",
+    "previewMode": "Preview Mode",
+    "livePreview": "Live Preview"
   },
   "downloadResults": {
     "cardTitle": "Download Results",
     "noDownload": "No converted images to display or download yet.",
-    "processFirst": "Process some images first!"
+    "processFirst": "Process some images first!",
+    "convertedFiles": "Converted Files",
+    "downloadAllZip": "Download All as ZIP",
+    "downloadTitle": "Download {{fileName}}",
+    "previewTitle": "Preview {{fileName}}",
+    "sizeSaved": "Saved {{percent}}%",
+    "originalSize": "Original: {{size}}",
+    "compressedSize": "Compressed: {{size}}"
+  },
+  "presets": {
+    "title": "Quick Presets",
+    "web": "Web",
+    "webDesc": "Optimized for web pages (max 500KB, 1920px)",
+    "email": "Email",
+    "emailDesc": "Small files for email attachments (max 200KB, 1024px)",
+    "socialMedia": "Social Media",
+    "socialMediaDesc": "Perfect for social platforms (max 1MB, 2048px)",
+    "thumbnail": "Thumbnail",
+    "thumbnailDesc": "Small preview images (max 50KB, 300px)",
+    "print": "Print",
+    "printDesc": "High quality for printing (max 10MB, 4096px)",
+    "custom": "Custom",
+    "customDesc": "Your custom settings"
+  },
+  "comparison": {
+    "title": "Before/After Comparison",
+    "before": "Before",
+    "after": "After",
+    "toggle": "Toggle Comparison View"
+  },
+  "editor": {
+    "title": "Image Editor",
+    "crop": "Crop",
+    "rotate": "Rotate",
+    "brightness": "Brightness",
+    "contrast": "Contrast",
+    "saturation": "Saturation",
+    "sharpness": "Sharpness",
+    "blur": "Blur",
+    "reset": "Reset",
+    "apply": "Apply",
+    "cancel": "Cancel"
+  },
+  "progress": {
+    "processing": "Processing {{current}} of {{total}}...",
+    "completed": "Completed {{count}} images",
+    "failed": "Failed to process {{count}} images",
+    "pending": "Pending",
+    "error": "Error"
+  },
+  "toast": {
+    "processingStarted": "Processing {{count}} images...",
+    "processingComplete": "Successfully processed {{count}} images!",
+    "processingError": "Failed to process some images",
+    "downloadStarted": "Preparing download...",
+    "downloadComplete": "Download ready!",
+    "copySuccess": "Copied to clipboard!",
+    "copyError": "Failed to copy to clipboard",
+    "importSuccess": "Successfully imported {{count}} images"
+  },
+  "shortcuts": {
+    "title": "Keyboard Shortcuts",
+    "openFiles": "Open files",
+    "processImages": "Process images",
+    "downloadAll": "Download all",
+    "selectAll": "Select all",
+    "deselectAll": "Deselect all",
+    "deleteSelected": "Delete selected",
+    "toggleView": "Toggle view mode",
+    "showShortcuts": "Show shortcuts",
+    "escape": "Close dialog/modal",
+    "navigate": "Navigate images"
+  },
+  "stats": {
+    "title": "Session Statistics",
+    "filesProcessed": "Files Processed",
+    "totalSaved": "Total Saved",
+    "avgCompression": "Avg. Compression",
+    "originalSize": "Original Size",
+    "compressedSize": "Compressed Size",
+    "compressionRatio": "Compression Ratio"
+  },
+  "history": {
+    "title": "Processing History",
+    "noHistory": "No processing history yet",
+    "clearHistory": "Clear History",
+    "restore": "Restore Settings"
+  },
+  "rename": {
+    "title": "Bulk Rename",
+    "pattern": "Rename Pattern",
+    "preview": "Preview",
+    "tokens": "Available Tokens",
+    "startIndex": "Start Index",
+    "apply": "Apply Rename"
+  },
+  "responsive": {
+    "title": "Responsive Images",
+    "sizes": "Output Sizes",
+    "generate": "Generate All Sizes",
+    "srcsetHint": "HTML srcset snippet included",
+    "downloadAll": "Download All Sizes"
+  },
+  "gallery": {
+    "viewList": "List View",
+    "viewGrid": "Grid View",
+    "selectAll": "Select All",
+    "deselectAll": "Deselect All",
+    "deleteSelected": "Delete Selected",
+    "selected": "{{count}} selected"
+  },
+  "dropzone": {
+    "dragActive": "Drop the files here...",
+    "dragInactive": "Drag & drop files here",
+    "pasteSupport": "You can also paste images (Ctrl+V)",
+    "maxFiles": "Maximum {{count}} files"
+  },
+  "urlImport": {
+    "title": "Import from URL",
+    "placeholder": "Enter image URL",
+    "import": "Import",
+    "error": "Failed to import image from URL",
+    "corsWarning": "Some URLs may not work due to CORS restrictions"
+  },
+  "ai": {
+    "formatSuggestion": "Suggested Format",
+    "formatReason": "Based on image analysis",
+    "qualitySuggestion": "Suggested Quality",
+    "qualityReason": "Based on content type",
+    "photographic": "Photographic content detected",
+    "graphic": "Graphic/illustration detected"
+  },
+  "pwa": {
+    "installPrompt": "Install ImageProx",
+    "installDescription": "Install for offline use and faster access",
+    "install": "Install",
+    "dismiss": "Not now"
+  },
+  "cropper": {
+    "title": "Crop Image",
+    "aspectRatio": "Aspect Ratio",
+    "freeform": "Freeform",
+    "square": "Square (1:1)",
+    "landscape": "Landscape (16:9)",
+    "portrait": "Portrait (9:16)",
+    "photo": "Photo (4:3)",
+    "classic": "Classic (3:2)"
   }
 }

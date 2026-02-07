@@ -378,10 +378,7 @@ describe("ConvertAction Component", () => {
       const inputElement =
         screen.getByLabelText<HTMLInputElement>(/Max Size \(MB\)/i);
       await act(async () => {
-        inputElement.focus(); // Focus before clear/type
-        await userEvent.clear(inputElement);
-        await userEvent.type(inputElement, "0.7");
-        fireEvent.blur(inputElement); // Blur to trigger save
+        fireEvent.change(inputElement, { target: { value: "0.7" } });
       });
       // handleMaxSizeChange saves it as a number, which JSON.stringify turns to "0.7"
       expect(localStorageMock.getItem("compressionMaxSizeMB")).toBe(

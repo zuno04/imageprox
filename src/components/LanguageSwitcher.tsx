@@ -19,7 +19,7 @@ const LanguageSwitcher: React.FC = () => {
 
   return (
     <div>
-      <select value={i18n.resolvedLanguage} onChange={handleLanguageChange}>
+      <select value={i18n.resolvedLanguage} onChange={handleLanguageChange} className="bg-background text-foreground border border-border rounded-md px-2 py-1 text-sm outline-none focus:ring-2 focus:ring-ring">
         {languages.map((lang) => (
           <option key={lang.code} value={lang.code}>
             {lang.nativeName}
