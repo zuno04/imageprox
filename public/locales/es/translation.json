@@ -19,11 +19,14 @@
     "selectedFiles_other": "Archivos seleccionados ({{count}}):",
     "previewAlt": "Vista previa de {{fileName}}",
     "previewTitle": "Vista previa {{fileName}}",
-    "removeTitle": "Eliminar {{fileName}}"
+    "removeTitle": "Eliminar {{fileName}}",
+    "pasteHint": "o pega desde el portapapeles (Ctrl+V)",
+    "dropzoneActive": "Suelta los archivos aquí...",
+    "urlImport": "Importar desde URL"
   },
   "convertAction": {
     "cardTitle": "Procesar imágenes",
-    "upladImages": "Sube algunas imágenes para comenzar a procesar.",
+    "uploadImages": "Sube algunas imágenes para comenzar a procesar.",
     "title": "Su optimizador de imágenes",
     "subTitle": "¡Sube tus imágenes, reduce su tamaño directamente en tu navegador y descárgalas individualmente o en un ZIP!",
     "maxSizeLabel": "Tamaño máx. (MB)",
@@ -34,7 +37,10 @@
     "formatPng": "PNG",
     "formatJpg": "JPG",
     "formatWebp": "WEBP",
+    "formatAvif": "AVIF",
     "webpWarning": "WEBP ofrece mejor compresión pero puede no ser compatible con todos los dispositivos.",
+    "avifWarning": "AVIF ofrece excelente compresión pero tiene soporte limitado en navegadores.",
+    "avifNotSupported": "AVIF no es compatible con tu navegador. Se usará WebP en su lugar.",
     "compressionModeLabel": "Modo de compresión",
     "modeAggressive": "Agresivo (Tamaño más pequeño)",
     "modeHighQuality": "Alta calidad (Tamaño más grande)",
@@ -47,11 +53,159 @@
     "errorFailedToReadBlob": "Error al leer el blob.",
     "errorUnexpectedResultFormat": "Formato de resultado inesperado.",
     "errorUnknown": "Error desconocido.",
-    "reducedFileNamePrefix": "Reducido_"
+    "reducedFileNamePrefix": "Reducido_",
+    "previewMode": "Modo de vista previa",
+    "livePreview": "Vista previa en vivo"
   },
   "downloadResults": {
     "cardTitle": "Descargar resultados",
     "noDownload": "Aún no hay imágenes convertidas para mostrar o descargar.",
-    "processFirst": "¡Procesa algunas imágenes primero!"
+    "processFirst": "¡Procesa algunas imágenes primero!",
+    "convertedFiles": "Archivos convertidos",
+    "downloadAllZip": "Descargar todo como ZIP",
+    "downloadTitle": "Descargar {{fileName}}",
+    "previewTitle": "Vista previa {{fileName}}",
+    "sizeSaved": "Ahorrado {{percent}}%",
+    "originalSize": "Original: {{size}}",
+    "compressedSize": "Comprimido: {{size}}"
+  },
+  "presets": {
+    "title": "Preajustes rápidos",
+    "web": "Web",
+    "webDesc": "Optimizado para páginas web (máx 500KB, 1920px)",
+    "email": "Correo electrónico",
+    "emailDesc": "Archivos pequeños para adjuntos de correo (máx 200KB, 1024px)",
+    "socialMedia": "Redes sociales",
+    "socialMediaDesc": "Perfecto para plataformas sociales (máx 1MB, 2048px)",
+    "thumbnail": "Miniatura",
+    "thumbnailDesc": "Pequeñas imágenes de vista previa (máx 50KB, 300px)",
+    "print": "Impresión",
+    "printDesc": "Alta calidad para impresión (máx 10MB, 4096px)",
+    "custom": "Personalizado",
+    "customDesc": "Tus ajustes personalizados"
+  },
+  "comparison": {
+    "title": "Comparación Antes/Después",
+    "before": "Antes",
+    "after": "Después",
+    "toggle": "Alternar vista de comparación"
+  },
+  "editor": {
+    "title": "Editor de imagen",
+    "crop": "Recortar",
+    "rotate": "Rotar",
+    "brightness": "Brillo",
+    "contrast": "Contraste",
+    "saturation": "Saturación",
+    "sharpness": "Nitidez",
+    "blur": "Desenfoque",
+    "reset": "Restablecer",
+    "apply": "Aplicar",
+    "cancel": "Cancelar"
+  },
+  "progress": {
+    "processing": "Procesando {{current}} de {{total}}...",
+    "completed": "{{count}} imágenes completadas",
+    "failed": "Falló el procesamiento de {{count}} imágenes",
+    "pending": "Pendiente",
+    "error": "Error"
+  },
+  "toast": {
+    "processingStarted": "Procesando {{count}} imágenes...",
+    "processingComplete": "¡{{count}} imágenes procesadas exitosamente!",
+    "processingError": "Falló el procesamiento de algunas imágenes",
+    "downloadStarted": "Preparando descarga...",
+    "downloadComplete": "¡Descarga lista!",
+    "copySuccess": "¡Copiado al portapapeles!",
+    "copyError": "Error al copiar al portapapeles",
+    "importSuccess": "{{count}} imágenes importadas exitosamente"
+  },
+  "shortcuts": {
+    "title": "Atajos de teclado",
+    "openFiles": "Abrir archivos",
+    "processImages": "Procesar imágenes",
+    "downloadAll": "Descargar todo",
+    "selectAll": "Seleccionar todo",
+    "deselectAll": "Deseleccionar todo",
+    "deleteSelected": "Eliminar seleccionados",
+    "toggleView": "Cambiar modo de vista",
+    "showShortcuts": "Mostrar atajos",
+    "escape": "Cerrar diálogo/modal",
+    "navigate": "Navegar imágenes"
+  },
+  "stats": {
+    "title": "Estadísticas de sesión",
+    "filesProcessed": "Archivos procesados",
+    "totalSaved": "Total ahorrado",
+    "avgCompression": "Compresión prom.",
+    "originalSize": "Tamaño original",
+    "compressedSize": "Tamaño comprimido",
+    "compressionRatio": "Ratio de compresión"
+  },
+  "history": {
+    "title": "Historial de procesamiento",
+    "noHistory": "Sin historial de procesamiento",
+    "clearHistory": "Borrar historial",
+    "restore": "Restaurar configuración"
+  },
+  "rename": {
+    "title": "Renombrado masivo",
+    "pattern": "Patrón de renombrado",
+    "preview": "Vista previa",
+    "tokens": "Tokens disponibles",
+    "startIndex": "Índice inicial",
+    "apply": "Aplicar renombrado"
+  },
+  "responsive": {
+    "title": "Imágenes responsivas",
+    "sizes": "Tamaños de salida",
+    "generate": "Generar todos los tamaños",
+    "srcsetHint": "Fragmento HTML srcset incluido",
+    "downloadAll": "Descargar todos los tamaños"
+  },
+  "gallery": {
+    "viewList": "Vista de lista",
+    "viewGrid": "Vista de cuadrícula",
+    "selectAll": "Seleccionar todo",
+    "deselectAll": "Deseleccionar todo",
+    "deleteSelected": "Eliminar seleccionados",
+    "selected": "{{count}} seleccionado(s)"
+  },
+  "dropzone": {
+    "dragActive": "Suelta los archivos aquí...",
+    "dragInactive": "Arrastra y suelta archivos aquí",
+    "pasteSupport": "También puedes pegar imágenes (Ctrl+V)",
+    "maxFiles": "Máximo {{count}} archivos"
+  },
+  "urlImport": {
+    "title": "Importar desde URL",
+    "placeholder": "Ingresa la URL de la imagen",
+    "import": "Importar",
+    "error": "Error al importar imagen desde URL",
+    "corsWarning": "Algunas URLs pueden no funcionar debido a restricciones CORS"
+  },
+  "ai": {
+    "formatSuggestion": "Formato sugerido",
+    "formatReason": "Basado en análisis de imagen",
+    "qualitySuggestion": "Calidad sugerida",
+    "qualityReason": "Basado en tipo de contenido",
+    "photographic": "Contenido fotográfico detectado",
+    "graphic": "Gráfico/ilustración detectado"
+  },
+  "pwa": {
+    "installPrompt": "Instalar ImageProx",
+    "installDescription": "Instalar para uso sin conexión y acceso más rápido",
+    "install": "Instalar",
+    "dismiss": "Ahora no"
+  },
+  "cropper": {
+    "title": "Recortar imagen",
+    "aspectRatio": "Relación de aspecto",
+    "freeform": "Libre",
+    "square": "Cuadrado (1:1)",
+    "landscape": "Paisaje (16:9)",
+    "portrait": "Retrato (9:16)",
+    "photo": "Foto (4:3)",
+    "classic": "Clásico (3:2)"
   }
 }

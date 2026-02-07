@@ -19,11 +19,14 @@
     "selectedFiles_other": "Ausgewählte Dateien ({{count}}):",
     "previewAlt": "Vorschau von {{fileName}}",
     "previewTitle": "Vorschau {{fileName}}",
-    "removeTitle": "Entfernen {{fileName}}"
+    "removeTitle": "Entfernen {{fileName}}",
+    "pasteHint": "oder aus Zwischenablage einfügen (Strg+V)",
+    "dropzoneActive": "Dateien hier ablegen...",
+    "urlImport": "Von URL importieren"
   },
   "convertAction": {
     "cardTitle": "Bilder verarbeiten",
-    "upladImages": "Laden Sie einige Bilder hoch, um die Verarbeitung zu beginnen.",
+    "uploadImages": "Laden Sie einige Bilder hoch, um die Verarbeitung zu beginnen.",
     "title": "Ihr Bildoptimierer",
     "subTitle": "Laden Sie Ihre Bilder hoch, reduzieren Sie deren Größe direkt in Ihrem Browser und laden Sie sie einzeln oder als ZIP herunter!",
     "maxSizeLabel": "Max. Größe (MB)",
@@ -34,7 +37,10 @@
     "formatPng": "PNG",
     "formatJpg": "JPG",
     "formatWebp": "WEBP",
+    "formatAvif": "AVIF",
     "webpWarning": "WEBP bietet eine bessere Komprimierung, wird aber möglicherweise nicht von allen Geräten unterstützt.",
+    "avifWarning": "AVIF bietet hervorragende Komprimierung, hat aber eingeschränkte Browser-Unterstützung.",
+    "avifNotSupported": "AVIF wird in Ihrem Browser nicht unterstützt. WebP wird stattdessen verwendet.",
     "compressionModeLabel": "Komprimierungsmodus",
     "modeAggressive": "Aggressiv (Kleinere Größe)",
     "modeHighQuality": "Hohe Qualität (Größere Größe)",
@@ -47,11 +53,159 @@
     "errorFailedToReadBlob": "Fehler beim Lesen des Blobs.",
     "errorUnexpectedResultFormat": "Unerwartetes Ergebnisformat.",
     "errorUnknown": "Unbekannter Fehler.",
-    "reducedFileNamePrefix": "Reduziert_"
+    "reducedFileNamePrefix": "Reduziert_",
+    "previewMode": "Vorschaumodus",
+    "livePreview": "Live-Vorschau"
   },
   "downloadResults": {
     "cardTitle": "Ergebnisse herunterladen",
     "noDownload": "Noch keine konvertierten Bilder zum Anzeigen oder Herunterladen vorhanden.",
-    "processFirst": "Verarbeiten Sie zuerst einige Bilder!"
+    "processFirst": "Verarbeiten Sie zuerst einige Bilder!",
+    "convertedFiles": "Konvertierte Dateien",
+    "downloadAllZip": "Alle als ZIP herunterladen",
+    "downloadTitle": "{{fileName}} herunterladen",
+    "previewTitle": "Vorschau {{fileName}}",
+    "sizeSaved": "{{percent}}% gespart",
+    "originalSize": "Original: {{size}}",
+    "compressedSize": "Komprimiert: {{size}}"
+  },
+  "presets": {
+    "title": "Schnellvoreinstellungen",
+    "web": "Web",
+    "webDesc": "Optimiert für Webseiten (max 500KB, 1920px)",
+    "email": "E-Mail",
+    "emailDesc": "Kleine Dateien für E-Mail-Anhänge (max 200KB, 1024px)",
+    "socialMedia": "Social Media",
+    "socialMediaDesc": "Perfekt für soziale Plattformen (max 1MB, 2048px)",
+    "thumbnail": "Miniatur",
+    "thumbnailDesc": "Kleine Vorschaubilder (max 50KB, 300px)",
+    "print": "Druck",
+    "printDesc": "Hohe Qualität für Druck (max 10MB, 4096px)",
+    "custom": "Benutzerdefiniert",
+    "customDesc": "Ihre benutzerdefinierten Einstellungen"
+  },
+  "comparison": {
+    "title": "Vorher/Nachher Vergleich",
+    "before": "Vorher",
+    "after": "Nachher",
+    "toggle": "Vergleichsansicht umschalten"
+  },
+  "editor": {
+    "title": "Bildeditor",
+    "crop": "Zuschneiden",
+    "rotate": "Drehen",
+    "brightness": "Helligkeit",
+    "contrast": "Kontrast",
+    "saturation": "Sättigung",
+    "sharpness": "Schärfe",
+    "blur": "Weichzeichnen",
+    "reset": "Zurücksetzen",
+    "apply": "Anwenden",
+    "cancel": "Abbrechen"
+  },
+  "progress": {
+    "processing": "Verarbeite {{current}} von {{total}}...",
+    "completed": "{{count}} Bilder abgeschlossen",
+    "failed": "{{count}} Bilder fehlgeschlagen",
+    "pending": "Ausstehend",
+    "error": "Fehler"
+  },
+  "toast": {
+    "processingStarted": "Verarbeite {{count}} Bilder...",
+    "processingComplete": "{{count}} Bilder erfolgreich verarbeitet!",
+    "processingError": "Einige Bilder konnten nicht verarbeitet werden",
+    "downloadStarted": "Download wird vorbereitet...",
+    "downloadComplete": "Download bereit!",
+    "copySuccess": "In Zwischenablage kopiert!",
+    "copyError": "Kopieren in Zwischenablage fehlgeschlagen",
+    "importSuccess": "{{count}} Bilder erfolgreich importiert"
+  },
+  "shortcuts": {
+    "title": "Tastaturkürzel",
+    "openFiles": "Dateien öffnen",
+    "processImages": "Bilder verarbeiten",
+    "downloadAll": "Alle herunterladen",
+    "selectAll": "Alle auswählen",
+    "deselectAll": "Auswahl aufheben",
+    "deleteSelected": "Ausgewählte löschen",
+    "toggleView": "Ansichtsmodus wechseln",
+    "showShortcuts": "Tastaturkürzel anzeigen",
+    "escape": "Dialog/Modal schließen",
+    "navigate": "Bilder navigieren"
+  },
+  "stats": {
+    "title": "Sitzungsstatistiken",
+    "filesProcessed": "Verarbeitete Dateien",
+    "totalSaved": "Gesamt gespart",
+    "avgCompression": "Durchschn. Komprimierung",
+    "originalSize": "Originalgröße",
+    "compressedSize": "Komprimierte Größe",
+    "compressionRatio": "Komprimierungsverhältnis"
+  },
+  "history": {
+    "title": "Verarbeitungshistorie",
+    "noHistory": "Noch keine Verarbeitungshistorie",
+    "clearHistory": "Historie löschen",
+    "restore": "Einstellungen wiederherstellen"
+  },
+  "rename": {
+    "title": "Massenumbenennung",
+    "pattern": "Umbenennungsmuster",
+    "preview": "Vorschau",
+    "tokens": "Verfügbare Platzhalter",
+    "startIndex": "Startindex",
+    "apply": "Umbenennung anwenden"
+  },
+  "responsive": {
+    "title": "Responsive Bilder",
+    "sizes": "Ausgabegrößen",
+    "generate": "Alle Größen generieren",
+    "srcsetHint": "HTML srcset Snippet enthalten",
+    "downloadAll": "Alle Größen herunterladen"
+  },
+  "gallery": {
+    "viewList": "Listenansicht",
+    "viewGrid": "Rasteransicht",
+    "selectAll": "Alle auswählen",
+    "deselectAll": "Auswahl aufheben",
+    "deleteSelected": "Ausgewählte löschen",
+    "selected": "{{count}} ausgewählt"
+  },
+  "dropzone": {
+    "dragActive": "Dateien hier ablegen...",
+    "dragInactive": "Dateien hierher ziehen",
+    "pasteSupport": "Sie können auch Bilder einfügen (Strg+V)",
+    "maxFiles": "Maximal {{count}} Dateien"
+  },
+  "urlImport": {
+    "title": "Von URL importieren",
+    "placeholder": "Bild-URL eingeben",
+    "import": "Importieren",
+    "error": "Bild konnte nicht von URL importiert werden",
+    "corsWarning": "Einige URLs funktionieren möglicherweise aufgrund von CORS-Einschränkungen nicht"
+  },
+  "ai": {
+    "formatSuggestion": "Vorgeschlagenes Format",
+    "formatReason": "Basierend auf Bildanalyse",
+    "qualitySuggestion": "Vorgeschlagene Qualität",
+    "qualityReason": "Basierend auf Inhaltstyp",
+    "photographic": "Fotografischer Inhalt erkannt",
+    "graphic": "Grafik/Illustration erkannt"
+  },
+  "pwa": {
+    "installPrompt": "ImageProx installieren",
+    "installDescription": "Für Offline-Nutzung und schnelleren Zugriff installieren",
+    "install": "Installieren",
+    "dismiss": "Nicht jetzt"
+  },
+  "cropper": {
+    "title": "Bild zuschneiden",
+    "aspectRatio": "Seitenverhältnis",
+    "freeform": "Frei",
+    "square": "Quadrat (1:1)",
+    "landscape": "Querformat (16:9)",
+    "portrait": "Hochformat (9:16)",
+    "photo": "Foto (4:3)",
+    "classic": "Klassisch (3:2)"
   }
 }
