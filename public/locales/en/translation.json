@@ -7,7 +7,10 @@
   "footer": {
     "copyright": "ImageProx © {{year}}. Built with React, Vite, TypeScript & Shadcn/ui.",
     "sendFeedback": "Send Feedback",
-    "githubProfile": "GitHub Profile"
+    "githubProfile": "GitHub Profile",
+    "linkedin": "LinkedIn",
+    "portfolio": "Portfolio",
+    "builtBy": "Built by {{name}}"
   },
   "fileUpload": {
     "cardTitle": "Upload Files",
@@ -67,7 +70,10 @@
     "previewTitle": "Preview {{fileName}}",
     "sizeSaved": "Saved {{percent}}%",
     "originalSize": "Original: {{size}}",
-    "compressedSize": "Compressed: {{size}}"
+    "compressedSize": "Compressed: {{size}}",
+    "copyTitle": "Copy image to clipboard",
+    "shareTitle": "Share {{fileName}}",
+    "shareCard": "Share savings card"
   },
   "presets": {
     "title": "Quick Presets",
@@ -118,7 +124,8 @@
     "downloadComplete": "Download ready!",
     "copySuccess": "Copied to clipboard!",
     "copyError": "Failed to copy to clipboard",
-    "importSuccess": "Successfully imported {{count}} images"
+    "importSuccess": "Successfully imported {{count}} images",
+    "shareUnsupported": "Sharing isn't available in this browser"
   },
   "shortcuts": {
     "title": "Keyboard Shortcuts",
@@ -196,7 +203,10 @@
     "installPrompt": "Install ImageProx",
     "installDescription": "Install for offline use and faster access",
     "install": "Install",
-    "dismiss": "Not now"
+    "dismiss": "Not now",
+    "installed": "App installed.",
+    "installCancelled": "Installation was cancelled.",
+    "installFailed": "Installation couldn't be completed."
   },
   "cropper": {
     "title": "Crop Image",
@@ -207,5 +217,21 @@
     "portrait": "Portrait (9:16)",
     "photo": "Photo (4:3)",
     "classic": "Classic (3:2)"
+  },
+  "share": {
+    "cardTagline": "100% in-browser · no uploads"
+  },
+  "watermark": {
+    "title": "Watermark",
+    "text": "Watermark text",
+    "position": "Position",
+    "opacity": "Opacity (0.1-1)",
+    "positions": {
+      "topLeft": "Top left",
+      "topRight": "Top right",
+      "bottomLeft": "Bottom left",
+      "bottomRight": "Bottom right",
+      "center": "Center"
+    }
   }
 }

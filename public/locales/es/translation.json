@@ -7,7 +7,10 @@
   "footer": {
     "copyright": "ImageProx © {{year}}. Creado con React, Vite, TypeScript & Shadcn/ui.",
     "sendFeedback": "Enviar comentarios",
-    "githubProfile": "Perfil de GitHub"
+    "githubProfile": "Perfil de GitHub",
+    "linkedin": "LinkedIn",
+    "portfolio": "Portfolio",
+    "builtBy": "Desarrollado por {{name}}"
   },
   "fileUpload": {
     "cardTitle": "Subir archivos",
@@ -67,7 +70,10 @@
     "previewTitle": "Vista previa {{fileName}}",
     "sizeSaved": "Ahorrado {{percent}}%",
     "originalSize": "Original: {{size}}",
-    "compressedSize": "Comprimido: {{size}}"
+    "compressedSize": "Comprimido: {{size}}",
+    "copyTitle": "Copiar la imagen al portapapeles",
+    "shareTitle": "Compartir {{fileName}}",
+    "shareCard": "Compartir tarjeta de ahorro"
   },
   "presets": {
     "title": "Preajustes rápidos",
@@ -118,7 +124,8 @@
     "downloadComplete": "¡Descarga lista!",
     "copySuccess": "¡Copiado al portapapeles!",
     "copyError": "Error al copiar al portapapeles",
-    "importSuccess": "{{count}} imágenes importadas exitosamente"
+    "importSuccess": "{{count}} imágenes importadas exitosamente",
+    "shareUnsupported": "Compartir no está disponible en este navegador"
   },
   "shortcuts": {
     "title": "Atajos de teclado",
@@ -196,7 +203,10 @@
     "installPrompt": "Instalar ImageProx",
     "installDescription": "Instalar para uso sin conexión y acceso más rápido",
     "install": "Instalar",
-    "dismiss": "Ahora no"
+    "dismiss": "Ahora no",
+    "installed": "Aplicación instalada.",
+    "installCancelled": "Instalación cancelada.",
+    "installFailed": "No se pudo completar la instalación."
   },
   "cropper": {
     "title": "Recortar imagen",
@@ -207,5 +217,21 @@
     "portrait": "Retrato (9:16)",
     "photo": "Foto (4:3)",
     "classic": "Clásico (3:2)"
+  },
+  "share": {
+    "cardTagline": "100 % en el navegador · sin subidas"
+  },
+  "watermark": {
+    "title": "Marca de agua",
+    "text": "Texto de la marca de agua",
+    "position": "Posición",
+    "opacity": "Opacidad (0.1-1)",
+    "positions": {
+      "topLeft": "Arriba a la izquierda",
+      "topRight": "Arriba a la derecha",
+      "bottomLeft": "Abajo a la izquierda",
+      "bottomRight": "Abajo a la derecha",
+      "center": "Centro"
+    }
   }
 }

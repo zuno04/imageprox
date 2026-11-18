@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'; // Import useTranslation
 import { ThemeToggle } from "../ui/ThemeToggle"; // Adjust path as needed
 import LanguageSwitcher from '../LanguageSwitcher'; // Import the new component
+import { InstallButton } from '../pwa/InstallButton';
 
 export function Header() {
   const { t } = useTranslation(); // Initialize useTranslation
@@ -13,6 +14,7 @@ export function Header() {
         <h1 className="text-xl sm:text-2xl font-bold text-primary">{t('header.title')}</h1>{" "}
         {/* Shorter Title Example */}
         <div className="flex items-center gap-x-2"> {/* Added a div to group ThemeToggle and LanguageSwitcher */}
+          <InstallButton />
           <ThemeToggle />
           <LanguageSwitcher /> {/* Add the component here */}
         </div>

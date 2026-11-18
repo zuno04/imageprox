@@ -6,6 +6,12 @@
 export interface ConvertedImage {
   image_name: string;
   image_data: string; // Base64 data URL
+  /**
+   * Index of the source file in the upload list. Converted results skip files
+   * that failed to compress, so positional pairing against the original files
+   * would drift after any failure.
+   */
+  sourceIndex?: number;
 }
 
 /**
@@ -163,6 +169,25 @@ export interface FilterSettings {
 export interface AspectRatioPreset {
   name: string;
   ratio: number | undefined; // undefined for freeform
+}
+
+/** Watermark anchor position */
+export type WatermarkPosition =
+  | 'top-left'
+  | 'top-right'
+  | 'bottom-left'
+  | 'bottom-right'
+  | 'center';
+
+/** Text watermark applied to outputs after compression */
+export interface WatermarkSettings {
+  enabled: boolean;
+  text: string;
+  position: WatermarkPosition;
+  /** 0 to 1 */
+  opacity: number;
+  /** Font size as a percentage of the image width */
+  fontSize: number;
 }
 
 /**

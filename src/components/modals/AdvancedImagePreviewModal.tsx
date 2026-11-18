@@ -1,7 +1,8 @@
 // src/components/modals/AdvancedImagePreviewModal.tsx
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { X, ZoomIn, ZoomOut, RotateCw, RotateCcw, Download as DownloadIcon, ChevronLeft, ChevronRight, Palette, Save } from 'lucide-react'; // Added Save
+import { X, ZoomIn, ZoomOut, RotateCw, RotateCcw, Download as DownloadIcon, ChevronLeft, ChevronRight, Palette, Save, SlidersHorizontal } from 'lucide-react'; // Added Save
+import ImageEditor from '@/components/editor/ImageEditor';
 import { Button } from '@/components/ui/button';
 import { saveToLocalStorage, loadFromLocalStorage } from '@/lib/utils';
 
@@ -36,6 +37,7 @@ const AdvancedImagePreviewModal: React.FC<AdvancedImagePreviewModalProps> = ({
   const [zoom, setZoom] = useState(initialZoom);
   const [rotation, setRotation] = useState(0); // View-only rotation
   const [editedImageData, setEditedImageData] = useState<string | null>(null); // For canvas edited image
+  const [editorOpen, setEditorOpen] = useState(false);
   const imageContainerRef = useRef<HTMLDivElement>(null);
 
   const currentImage = images[currentIndex];
@@ -55,6 +57,7 @@ const AdvancedImagePreviewModal: React.FC<AdvancedImagePreviewModalProps> = ({
   const resetTransformations = useCallback((resetEditedData = true) => {
     setZoom(initialZoom); 
     setRotation(0);
+    setEditorOpen(false);
     if (resetEditedData) {
       setEditedImageData(null);
     }
@@ -261,6 +264,15 @@ const AdvancedImagePreviewModal: React.FC<AdvancedImagePreviewModalProps> = ({
             <Button variant="ghost" size="icon" onClick={handleRotate} title="Rotate View"> <RotateCw size={20} /> </Button>
             <Button variant="ghost" size="icon" onClick={handleEditRotate} title="Rotate Edit (90° CW)"> <RotateCcw size={20} /> </Button>
             <Button variant="ghost" size="icon" onClick={handleEditGrayscale} title="Grayscale"> <Palette size={20} /> </Button>
+            <Button
+              variant={editorOpen ? 'default' : 'ghost'}
+              size="icon"
+              onClick={() => setEditorOpen((open) => !open)}
+              title="Edit (crop, adjust, flip)"
+              aria-pressed={editorOpen}
+            >
+              <SlidersHorizontal size={20} />
+            </Button>
             {onApplyEdit && (
               <Button
                 variant="ghost"
@@ -283,7 +295,18 @@ const AdvancedImagePreviewModal: React.FC<AdvancedImagePreviewModalProps> = ({
         </div>
 
         <div ref={imageContainerRef} className="flex-1 flex items-center justify-center overflow-hidden p-2 sm:p-4"> {/* Added ref */}
-          {displaySrc ? (
+          {editorOpen && displaySrc ? (
+            <div className="w-full max-w-4xl max-h-full overflow-y-auto rounded-lg bg-background p-4 text-foreground">
+              <ImageEditor
+                imageSrc={displaySrc}
+                onApply={(edited) => {
+                  setEditedImageData(edited);
+                  setEditorOpen(false);
+                }}
+                onCancel={() => setEditorOpen(false)}
+              />
+            </div>
+          ) : displaySrc ? (
             <img
               src={displaySrc}
               alt={currentImage.alt}

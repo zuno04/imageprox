@@ -7,7 +7,10 @@
   "footer": {
     "copyright": "ImageProx © {{year}}. Construit avec React, Vite, TypeScript & Shadcn/ui.",
     "sendFeedback": "Envoyer des commentaires",
-    "githubProfile": "Profil GitHub"
+    "githubProfile": "Profil GitHub",
+    "linkedin": "LinkedIn",
+    "portfolio": "Portfolio",
+    "builtBy": "Développé par {{name}}"
   },
   "fileUpload": {
     "cardTitle": "Téléverser les fichiers",
@@ -67,7 +70,10 @@
     "previewTitle": "Aperçu {{fileName}}",
     "sizeSaved": "Économisé {{percent}}%",
     "originalSize": "Original : {{size}}",
-    "compressedSize": "Compressé : {{size}}"
+    "compressedSize": "Compressé : {{size}}",
+    "copyTitle": "Copier l'image dans le presse-papiers",
+    "shareTitle": "Partager {{fileName}}",
+    "shareCard": "Partager la carte d'économies"
   },
   "presets": {
     "title": "Préréglages rapides",
@@ -118,7 +124,8 @@
     "downloadComplete": "Téléchargement prêt !",
     "copySuccess": "Copié dans le presse-papiers !",
     "copyError": "Échec de la copie dans le presse-papiers",
-    "importSuccess": "{{count}} images importées avec succès"
+    "importSuccess": "{{count}} images importées avec succès",
+    "shareUnsupported": "Le partage n'est pas disponible dans ce navigateur"
   },
   "shortcuts": {
     "title": "Raccourcis clavier",
@@ -196,7 +203,10 @@
     "installPrompt": "Installer ImageProx",
     "installDescription": "Installer pour une utilisation hors ligne et un accès plus rapide",
     "install": "Installer",
-    "dismiss": "Pas maintenant"
+    "dismiss": "Pas maintenant",
+    "installed": "Application installée.",
+    "installCancelled": "Installation annulée.",
+    "installFailed": "L'installation n'a pas pu aboutir."
   },
   "cropper": {
     "title": "Recadrer l'image",
@@ -207,5 +217,21 @@
     "portrait": "Portrait (9:16)",
     "photo": "Photo (4:3)",
     "classic": "Classique (3:2)"
+  },
+  "share": {
+    "cardTagline": "100 % dans le navigateur · aucun envoi"
+  },
+  "watermark": {
+    "title": "Filigrane",
+    "text": "Texte du filigrane",
+    "position": "Position",
+    "opacity": "Opacité (0.1-1)",
+    "positions": {
+      "topLeft": "En haut à gauche",
+      "topRight": "En haut à droite",
+      "bottomLeft": "En bas à gauche",
+      "bottomRight": "En bas à droite",
+      "center": "Centre"
+    }
   }
 }

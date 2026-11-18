@@ -11,6 +11,7 @@ import ProcessingHistory from "./components/history/ProcessingHistory";
 import BulkRenamer from "./components/rename/BulkRenamer";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
 import { saveHistoryEntry, createHistoryEntry } from "./lib/storage";
+import { saveToLocalStorage } from "./lib/utils";
 import type { ConvertedImage, ProcessingOptions } from "./types";
 
 function App() {
@@ -20,6 +21,8 @@ function App() {
   const [convertedImages, setConvertedImages] = useState<ConvertedImage[]>([]);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const [renamerOpen, setRenamerOpen] = useState(false);
+  // Bumped after restoring settings so ConvertAction re-reads localStorage.
+  const [settingsVersion, setSettingsVersion] = useState(0);
 
   const handleApplyEditToConvertedImage = ({
     newSrc,
@@ -71,7 +74,11 @@ function App() {
   };
 
   const handleProcessingComplete = useCallback(
-    (originalFiles: File[], converted: ConvertedImage[]) => {
+    (
+      originalFiles: File[],
+      converted: ConvertedImage[],
+      options: ProcessingOptions
+    ) => {
       // Calculate stats for history
       const totalOriginalSize = originalFiles.reduce(
         (acc, f) => acc + f.size,
@@ -88,14 +95,6 @@ function App() {
           ? ((totalOriginalSize - totalProcessedSize) / totalOriginalSize) *
             100
           : 0;
-
-      const options: ProcessingOptions = {
-        maxSizeMB: 1,
-        maxWidthOrHeight: 1920,
-        outputFormat: "original",
-        compressionMode: "lossy",
-        keepExif: false,
-      };
 
       const entry = createHistoryEntry(converted.length, options, {
         filesProcessed: converted.length,
@@ -126,6 +125,15 @@ function App() {
     },
     []
   );
+
+  const handleRestoreSettings = useCallback((options: ProcessingOptions) => {
+    saveToLocalStorage("compressionMaxSizeMB", options.maxSizeMB);
+    saveToLocalStorage("compressionMaxWidthOrHeight", options.maxWidthOrHeight);
+    saveToLocalStorage("compressionOutputFormat", options.outputFormat);
+    saveToLocalStorage("compressionQualityMode", options.compressionMode);
+    saveToLocalStorage("compressionKeepExif", options.keepExif);
+    setSettingsVersion((version) => version + 1);
+  }, []);
 
   // Filenames for bulk renamer
   const convertedFilenames = useMemo(
@@ -180,6 +188,7 @@ function App() {
             </h2>
             {imagesToProcess.length > 0 ? (
               <ConvertAction
+                key={settingsVersion}
                 images={imagesToProcess}
                 setConverted={setConvertedImages}
                 onProcessingComplete={handleProcessingComplete}
@@ -193,7 +202,10 @@ function App() {
             )}
 
             {/* Processing History */}
-            <ProcessingHistory className="mt-6" />
+            <ProcessingHistory
+              className="mt-6"
+              onRestoreSettings={handleRestoreSettings}
+            />
           </section>
 
           {/* Column 3: Download Area */}
@@ -205,6 +217,7 @@ function App() {
               converted={convertedImages}
               originalFiles={imagesToProcess}
               onApplyEdit={handleApplyEditToConvertedImage}
+              onOpenRenamer={() => setRenamerOpen(true)}
             />
           </section>
         </main>

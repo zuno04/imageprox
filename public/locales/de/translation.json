@@ -7,7 +7,10 @@
   "footer": {
     "copyright": "ImageProx © {{year}}. Entwickelt mit React, Vite, TypeScript & Shadcn/ui.",
     "sendFeedback": "Feedback senden",
-    "githubProfile": "GitHub Profil"
+    "githubProfile": "GitHub Profil",
+    "linkedin": "LinkedIn",
+    "portfolio": "Portfolio",
+    "builtBy": "Entwickelt von {{name}}"
   },
   "fileUpload": {
     "cardTitle": "Dateien hochladen",
@@ -67,7 +70,10 @@
     "previewTitle": "Vorschau {{fileName}}",
     "sizeSaved": "{{percent}}% gespart",
     "originalSize": "Original: {{size}}",
-    "compressedSize": "Komprimiert: {{size}}"
+    "compressedSize": "Komprimiert: {{size}}",
+    "copyTitle": "Bild in die Zwischenablage kopieren",
+    "shareTitle": "{{fileName}} teilen",
+    "shareCard": "Ersparnis-Karte teilen"
   },
   "presets": {
     "title": "Schnellvoreinstellungen",
@@ -118,7 +124,8 @@
     "downloadComplete": "Download bereit!",
     "copySuccess": "In Zwischenablage kopiert!",
     "copyError": "Kopieren in Zwischenablage fehlgeschlagen",
-    "importSuccess": "{{count}} Bilder erfolgreich importiert"
+    "importSuccess": "{{count}} Bilder erfolgreich importiert",
+    "shareUnsupported": "Teilen ist in diesem Browser nicht verfügbar"
   },
   "shortcuts": {
     "title": "Tastaturkürzel",
@@ -196,7 +203,10 @@
     "installPrompt": "ImageProx installieren",
     "installDescription": "Für Offline-Nutzung und schnelleren Zugriff installieren",
     "install": "Installieren",
-    "dismiss": "Nicht jetzt"
+    "dismiss": "Nicht jetzt",
+    "installed": "App installiert.",
+    "installCancelled": "Installation abgebrochen.",
+    "installFailed": "Installation konnte nicht abgeschlossen werden."
   },
   "cropper": {
     "title": "Bild zuschneiden",
@@ -207,5 +217,21 @@
     "portrait": "Hochformat (9:16)",
     "photo": "Foto (4:3)",
     "classic": "Klassisch (3:2)"
+  },
+  "share": {
+    "cardTagline": "100 % im Browser · keine Uploads"
+  },
+  "watermark": {
+    "title": "Wasserzeichen",
+    "text": "Wasserzeichen-Text",
+    "position": "Position",
+    "opacity": "Deckkraft (0.1-1)",
+    "positions": {
+      "topLeft": "Oben links",
+      "topRight": "Oben rechts",
+      "bottomLeft": "Unten links",
+      "bottomRight": "Unten rechts",
+      "center": "Mitte"
+    }
   }
 }

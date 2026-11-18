@@ -46,6 +46,17 @@ const FileUpload: React.FC<FileUploadProps> = ({
 
   const selection = useSelection(selectedFiles);
 
+  // Mirror the upload list to the parent after render. Calling the parent's
+  // setters from inside a setState updater updates another component while it renders.
+  useEffect(() => {
+    setImages(selectedFiles.map((f) => f.file));
+  }, [selectedFiles, setImages]);
+
+  useEffect(() => {
+    // Nothing left to upload means nothing left to convert.
+    if (selectedFiles.length === 0) setConverted([]);
+  }, [selectedFiles, setConverted]);
+
   // Generate thumbnail for a file
   const generateThumbnail = useCallback((file: File): Promise<string> => {
     return new Promise((resolve) => {
@@ -97,14 +108,11 @@ const FileUpload: React.FC<FileUploadProps> = ({
         }))
       );
 
-      setSelectedFiles((prev) => {
-        const updated = [...prev, ...filesWithIds];
-        setImages(updated.map((f) => f.file));
-        setConverted([]);
-        return updated;
-      });
+      setSelectedFiles((prev) => [...prev, ...filesWithIds]);
+      // Results from a previous batch no longer match the new file list.
+      setConverted([]);
     },
-    [generateThumbnail, setImages, setConverted]
+    [generateThumbnail, setConverted]
   );
 
   // Enhanced dropzone
@@ -129,26 +137,12 @@ const FileUpload: React.FC<FileUploadProps> = ({
       }
     }
 
-    setSelectedFiles((prev) => {
-      const updated = prev.filter((_, index) => index !== indexToRemove);
-      setImages(updated.map((f) => f.file));
-      if (updated.length === 0) {
-        setConverted([]);
-      }
-      return updated;
-    });
+    setSelectedFiles((prev) => prev.filter((_, index) => index !== indexToRemove));
   };
 
   const handleRemoveSelected = () => {
     const idsToRemove = selection.selectedIds;
-    setSelectedFiles((prev) => {
-      const updated = prev.filter((f) => !idsToRemove.has(f.id));
-      setImages(updated.map((f) => f.file));
-      if (updated.length === 0) {
-        setConverted([]);
-      }
-      return updated;
-    });
+    setSelectedFiles((prev) => prev.filter((f) => !idsToRemove.has(f.id)));
     selection.deselectAll();
     if (previewIndex !== null) {
       handlePreviewClose();

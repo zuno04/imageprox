@@ -15,17 +15,24 @@ import {
 } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
 import { saveToLocalStorage, loadFromLocalStorage } from "@/lib/utils";
+import { applyWatermark, DEFAULT_WATERMARK } from "@/lib/watermark";
 import PresetSelector from "@/components/presets/PresetSelector";
 import ProcessingProgress from "@/components/progress/ProcessingProgress";
 import FormatSuggestion from "@/components/ai/FormatSuggestion";
 import QualitySuggestion from "@/components/ai/QualitySuggestion";
 import { applyPreset, DEFAULT_OPTIONS } from "@/lib/presets";
+import { decodeHeic, isHeicFile } from "@/lib/heic";
 import type {
+  CompressionMode,
   ConvertedImage,
   PresetType,
+  ProcessingOptions,
   ProcessingStatus,
   OutputFormat,
+  WatermarkPosition,
+  WatermarkSettings,
 } from "@/types";
 
 interface ConvertActionProps {
@@ -33,7 +40,8 @@ interface ConvertActionProps {
   setConverted: (convertedImages: ConvertedImage[]) => void;
   onProcessingComplete?: (
     originalFiles: File[],
-    converted: ConvertedImage[]
+    converted: ConvertedImage[],
+    options: ProcessingOptions
   ) => void;
 }
 
@@ -55,6 +63,7 @@ const ConvertAction: React.FC<ConvertActionProps> = ({
   const LOCAL_STORAGE_OUTPUT_FORMAT_KEY = "compressionOutputFormat";
   const LOCAL_STORAGE_COMPRESSION_MODE_KEY = "compressionQualityMode";
   const LOCAL_STORAGE_KEEP_EXIF_KEY = "compressionKeepExif";
+  const LOCAL_STORAGE_WATERMARK_KEY = "compressionWatermark";
 
   const [maxSizeMB, setMaxSizeMB] = useState<number>(
     loadFromLocalStorage<number>(LOCAL_STORAGE_MAX_SIZE_KEY) || 1
@@ -71,6 +80,16 @@ const ConvertAction: React.FC<ConvertActionProps> = ({
   const [keepExif, setKeepExif] = useState<boolean>(
     loadFromLocalStorage<boolean>(LOCAL_STORAGE_KEEP_EXIF_KEY) ?? false
   );
+  const [watermark, setWatermark] = useState<WatermarkSettings>(
+    loadFromLocalStorage<WatermarkSettings>(LOCAL_STORAGE_WATERMARK_KEY) ??
+      DEFAULT_WATERMARK
+  );
+
+  const updateWatermark = (patch: Partial<WatermarkSettings>) => {
+    const next = { ...watermark, ...patch };
+    setWatermark(next);
+    saveToLocalStorage(LOCAL_STORAGE_WATERMARK_KEY, next);
+  };
 
   const [selectedPreset, setSelectedPreset] = useState<PresetType>("custom");
   const [processing, setProcessing] = useState<boolean>(false);
@@ -206,7 +225,11 @@ const ConvertAction: React.FC<ConvertActionProps> = ({
 
     try {
       for (let i = 0; i < imageFiles.length; i++) {
-        const file = imageFiles[i];
+        const uploadedFile = imageFiles[i];
+        // HEIC/HEIF cannot be decoded by canvas in most browsers; convert first.
+        const file = isHeicFile(uploadedFile)
+          ? await decodeHeic(uploadedFile)
+          : uploadedFile;
 
         // Update status to processing
         setFileProgress((prev) =>
@@ -229,7 +252,8 @@ const ConvertAction: React.FC<ConvertActionProps> = ({
             },
           });
 
-          const base64 = await convertBlobToBase64(compressed);
+          const watermarked = await applyWatermark(compressed, watermark);
+          const base64 = await convertBlobToBase64(watermarked);
           let filename =
             t("convertAction.reducedFileNamePrefix") + file.name;
           if (actualFormat !== "original") {
@@ -239,7 +263,7 @@ const ConvertAction: React.FC<ConvertActionProps> = ({
               file.name.replace(/\.[^/.]+$/, "") +
               `.${ext}`;
           }
-          results.push({ image_name: filename, image_data: base64 });
+          results.push({ image_name: filename, image_data: base64, sourceIndex: i });
 
           // Update status to completed
           setFileProgress((prev) =>
@@ -289,7 +313,13 @@ const ConvertAction: React.FC<ConvertActionProps> = ({
     if (result && result.length > 0) {
       setConverted(result);
       toast.success(t("toast.processingComplete", { count: result.length }));
-      onProcessingComplete?.(images, result);
+      onProcessingComplete?.(images, result, {
+        maxSizeMB,
+        maxWidthOrHeight,
+        outputFormat: outputFormat as OutputFormat,
+        compressionMode: compressionMode as CompressionMode,
+        keepExif,
+      });
     } else if (result && result.length === 0) {
       toast.error(t("toast.processingError"));
     }
@@ -436,6 +466,87 @@ const ConvertAction: React.FC<ConvertActionProps> = ({
             <Label htmlFor="keepExif">
               {t("convertAction.keepExifLabel")}
             </Label>
+          </div>
+
+          <div className="w-full px-4 space-y-3 border-t border-border pt-4">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="watermarkEnabled">
+                {t("watermark.title")}
+              </Label>
+              <Switch
+                id="watermarkEnabled"
+                checked={watermark.enabled}
+                onCheckedChange={(checked) =>
+                  updateWatermark({ enabled: checked })
+                }
+              />
+            </div>
+
+            {watermark.enabled && (
+              <div className="space-y-3">
+                <div className="space-y-2">
+                  <Label htmlFor="watermarkText">{t("watermark.text")}</Label>
+                  <Input
+                    id="watermarkText"
+                    value={watermark.text}
+                    maxLength={60}
+                    onChange={(e) => updateWatermark({ text: e.target.value })}
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="watermarkPosition">
+                      {t("watermark.position")}
+                    </Label>
+                    <Select
+                      value={watermark.position}
+                      onValueChange={(value) =>
+                        updateWatermark({
+                          position: value as WatermarkPosition,
+                        })
+                      }
+                    >
+                      <SelectTrigger id="watermarkPosition" className="w-full">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="top-left">
+                          {t("watermark.positions.topLeft")}
+                        </SelectItem>
+                        <SelectItem value="top-right">
+                          {t("watermark.positions.topRight")}
+                        </SelectItem>
+                        <SelectItem value="bottom-left">
+                          {t("watermark.positions.bottomLeft")}
+                        </SelectItem>
+                        <SelectItem value="bottom-right">
+                          {t("watermark.positions.bottomRight")}
+                        </SelectItem>
+                        <SelectItem value="center">
+                          {t("watermark.positions.center")}
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="watermarkOpacity">
+                      {t("watermark.opacity")}
+                    </Label>
+                    <Input
+                      id="watermarkOpacity"
+                      type="number"
+                      min="0.1"
+                      max="1"
+                      step="0.1"
+                      value={watermark.opacity}
+                      onChange={(e) =>
+                        updateWatermark({ opacity: Number(e.target.value) })
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           <Button

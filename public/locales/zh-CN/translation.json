@@ -7,7 +7,10 @@
   "footer": {
     "copyright": "ImageProx © {{year}}. 使用 React、Vite、TypeScript 和 Shadcn/ui 构建。",
     "sendFeedback": "发送反馈",
-    "githubProfile": "GitHub 个人资料"
+    "githubProfile": "GitHub 个人资料",
+    "linkedin": "LinkedIn",
+    "portfolio": "作品集",
+    "builtBy": "开发者 {{name}}"
   },
   "fileUpload": {
     "cardTitle": "上传文件",
@@ -67,7 +70,10 @@
     "previewTitle": "预览 {{fileName}}",
     "sizeSaved": "节省了 {{percent}}%",
     "originalSize": "原始：{{size}}",
-    "compressedSize": "压缩后：{{size}}"
+    "compressedSize": "压缩后：{{size}}",
+    "copyTitle": "复制图片到剪贴板",
+    "shareTitle": "分享 {{fileName}}",
+    "shareCard": "分享节省卡片"
   },
   "presets": {
     "title": "快速预设",
@@ -118,7 +124,8 @@
     "downloadComplete": "下载就绪！",
     "copySuccess": "已复制到剪贴板！",
     "copyError": "复制到剪贴板失败",
-    "importSuccess": "成功导入 {{count}} 张图片"
+    "importSuccess": "成功导入 {{count}} 张图片",
+    "shareUnsupported": "此浏览器不支持分享"
   },
   "shortcuts": {
     "title": "键盘快捷键",
@@ -196,7 +203,10 @@
     "installPrompt": "安装 ImageProx",
     "installDescription": "安装后可离线使用并更快访问",
     "install": "安装",
-    "dismiss": "暂不"
+    "dismiss": "暂不",
+    "installed": "应用已安装。",
+    "installCancelled": "安装已取消。",
+    "installFailed": "安装未能完成。"
   },
   "cropper": {
     "title": "裁剪图片",
@@ -207,5 +217,21 @@
     "portrait": "纵向 (9:16)",
     "photo": "照片 (4:3)",
     "classic": "经典 (3:2)"
+  },
+  "share": {
+    "cardTagline": "100% 浏览器内处理 · 不上传"
+  },
+  "watermark": {
+    "title": "水印",
+    "text": "水印文字",
+    "position": "位置",
+    "opacity": "不透明度 (0.1-1)",
+    "positions": {
+      "topLeft": "左上",
+      "topRight": "右上",
+      "bottomLeft": "左下",
+      "bottomRight": "右下",
+      "center": "居中"
+    }
   }
 }

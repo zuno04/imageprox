@@ -1,16 +1,28 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { Download, FileText, Eye, SplitSquareHorizontal } from "lucide-react";
+import { Download, FileText, Eye, SplitSquareHorizontal, Copy, Layers, PenLine, Share2 } from "lucide-react";
 import { generateZip } from "@/lib/jzip";
+import {
+  buildSavingsCard,
+  dataUrlToFile,
+  shareFiles,
+} from "@/lib/share";
 import AdvancedImagePreviewModal, {
   type ImageObject as ModalImageObject,
 } from "@/components/modals/AdvancedImagePreviewModal";
 import BeforeAfterSlider from "@/components/comparison/BeforeAfterSlider";
 import ThumbnailGrid from "@/components/gallery/ThumbnailGrid";
 import StatsDashboard from "@/components/stats/StatsDashboard";
+import ResponsiveGenerator from "@/components/responsive/ResponsiveGenerator";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useSelection } from "@/hooks/useSelection";
 import { formatBytes } from "@/hooks/useStats";
 import type { ConvertedImage, ViewMode } from "@/types";
@@ -20,6 +32,7 @@ import { v4 as uuidv4 } from "uuid";
 interface FileRenderDownloadProps {
   converted: ConvertedImage[];
   originalFiles?: File[];
+  onOpenRenamer?: () => void;
   onApplyEdit: (editedImage: {
     newSrc: string;
     originalIndex: number;
@@ -35,11 +48,13 @@ const FileRenderDownload: React.FC<FileRenderDownloadProps> = ({
   converted,
   originalFiles,
   onApplyEdit,
+  onOpenRenamer,
 }) => {
   const { t } = useTranslation();
 
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
   const [comparisonIndex, setComparisonIndex] = useState<number | null>(null);
+  const [responsiveIndex, setResponsiveIndex] = useState<number | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>(
     loadFromLocalStorage<ViewMode>("downloadViewMode") || "list"
   );
@@ -100,16 +115,110 @@ const FileRenderDownload: React.FC<FileRenderDownloadProps> = ({
     }
   };
 
+  const copyImageToClipboard = async (image: ConvertedImage) => {
+    try {
+      const blob = await fetch(image.image_data).then((res) => res.blob());
+      let pngBlob = blob;
+
+      // The Clipboard API only accepts PNG, so re-encode anything else.
+      if (blob.type !== "image/png") {
+        pngBlob = await new Promise<Blob>((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement("canvas");
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            const ctx = canvas.getContext("2d");
+            if (!ctx) {
+              reject(new Error("Canvas context unavailable"));
+              return;
+            }
+            ctx.drawImage(img, 0, 0);
+            canvas.toBlob((result) => {
+              if (result) resolve(result);
+              else reject(new Error("Failed to encode image"));
+            }, "image/png");
+          };
+          img.onerror = () => reject(new Error("Failed to load image"));
+          img.src = image.image_data;
+        });
+      }
+
+      await navigator.clipboard.write([
+        new ClipboardItem({ "image/png": pngBlob }),
+      ]);
+      toast.success(t("toast.copySuccess"));
+    } catch {
+      toast.error(t("toast.copyError"));
+    }
+  };
+
+  const handleShareImage = async (image: ConvertedImage) => {
+    const outcome = await shareFiles(
+      [dataUrlToFile(image.image_data, image.image_name)],
+      image.image_name
+    );
+    if (outcome === "unsupported") toast.error(t("toast.shareUnsupported"));
+  };
+
+  const handleShareCard = async () => {
+    try {
+      const card = await buildSavingsCard({
+        ratioPercent: parseFloat(stats.compressionRatio) || 0,
+        originalSize: stats.originalSize,
+        processedSize: stats.processedSize,
+        origin: window.location.host || window.location.origin,
+        tagline: t("share.cardTagline"),
+      });
+
+      const outcome = await shareFiles([card], "ImageProx");
+      if (outcome === "unsupported") {
+        // Downloading keeps the card usable where the share sheet is missing.
+        const url = URL.createObjectURL(card);
+        const anchor = document.createElement("a");
+        anchor.href = url;
+        anchor.download = card.name;
+        anchor.click();
+        URL.revokeObjectURL(url);
+        toast.success(t("toast.downloadComplete"));
+      }
+    } catch {
+      toast.error(t("toast.shareUnsupported"));
+    }
+  };
+
   const handleViewModeChange = (mode: ViewMode) => {
     setViewMode(mode);
     saveToLocalStorage("downloadViewMode", mode);
   };
 
-  // Get original file URL for comparison
-  const getOriginalUrl = (index: number): string | null => {
-    if (!originalFiles || !originalFiles[index]) return null;
-    return URL.createObjectURL(originalFiles[index]);
-  };
+  /**
+   * Pairs a converted result with its source file. Failed compressions are
+   * skipped when building the results, so `converted[i]` is not necessarily
+   * `originalFiles[i]`; `sourceIndex` carries the real link.
+   */
+  const sourceIndexFor = (convertedIndex: number): number =>
+    converted[convertedIndex]?.sourceIndex ?? convertedIndex;
+
+  // Object URLs are created once per result and revoked when the pairing changes.
+  const originalUrls = useMemo(() => {
+    const urls = new Map<number, string>();
+    if (!originalFiles) return urls;
+    converted.forEach((image, index) => {
+      const file = originalFiles[image.sourceIndex ?? index];
+      if (file) urls.set(index, URL.createObjectURL(file));
+    });
+    return urls;
+  }, [converted, originalFiles]);
+
+  useEffect(() => {
+    return () => {
+      originalUrls.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, [originalUrls]);
+
+  const getOriginalUrl = (index: number): string | null =>
+    originalUrls.get(index) ?? null;
 
   return (
     <div className="w-full p-4 space-y-6">
@@ -119,10 +228,32 @@ const FileRenderDownload: React.FC<FileRenderDownloadProps> = ({
             {t("downloadResults.convertedFiles")}
           </h2>
 
+          {onOpenRenamer && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full"
+              onClick={onOpenRenamer}
+            >
+              <PenLine size={16} className="mr-2" />
+              {t("rename.title")}
+            </Button>
+          )}
+
           {/* Stats Dashboard */}
           {originalFiles && originalFiles.length > 0 && (
             <StatsDashboard {...stats} compact />
           )}
+
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full"
+            onClick={handleShareCard}
+          >
+            <Share2 size={16} className="mr-2" aria-hidden="true" />
+            {t("downloadResults.shareCard")}
+          </Button>
 
           {/* Comparison view */}
           {comparisonIndex !== null && originalFiles && (
@@ -142,7 +273,9 @@ const FileRenderDownload: React.FC<FileRenderDownloadProps> = ({
               <BeforeAfterSlider
                 beforeSrc={getOriginalUrl(comparisonIndex) || ""}
                 afterSrc={converted[comparisonIndex]?.image_data || ""}
-                beforeSize={originalFiles[comparisonIndex]?.size}
+                beforeSize={
+                  originalFiles[sourceIndexFor(comparisonIndex)]?.size
+                }
                 afterSize={
                   converted[comparisonIndex]
                     ? Math.ceil(
@@ -216,9 +349,46 @@ const FileRenderDownload: React.FC<FileRenderDownloadProps> = ({
                         <FileText size={18} className="flex-shrink-0" />
                         <span className="truncate">{image.image_name}</span>
                       </a>
-                      <div className="flex items-center space-x-1">
+                      <div className="flex flex-wrap items-center justify-end gap-1">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          className="h-8 w-8 p-1"
+                          onClick={() => handleShareImage(image)}
+                          aria-label={t("downloadResults.shareTitle", {
+                            fileName: image.image_name,
+                          })}
+                          title={t("downloadResults.shareTitle", {
+                            fileName: image.image_name,
+                          })}
+                        >
+                          <Share2 size={16} aria-hidden="true" />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          className="h-8 w-8 p-1"
+                          onClick={() => copyImageToClipboard(image)}
+                          aria-label={t("downloadResults.copyTitle")}
+                          title={t("downloadResults.copyTitle")}
+                        >
+                          <Copy size={16} aria-hidden="true" />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          className="h-8 w-8 p-1"
+                          onClick={() => setResponsiveIndex(index)}
+                          aria-label={t("responsive.title")}
+                          title={t("responsive.title")}
+                        >
+                          <Layers size={16} aria-hidden="true" />
+                        </Button>
                         {/* Comparison button */}
-                        {originalFiles && originalFiles[index] && (
+                        {originalUrls.has(index) && (
                           <Button
                             variant="outline"
                             size="icon"
@@ -285,6 +455,35 @@ const FileRenderDownload: React.FC<FileRenderDownloadProps> = ({
               </Button>
             )}
           </div>
+
+          {/* Responsive sizes dialog */}
+          <Dialog
+            open={responsiveIndex !== null}
+            onOpenChange={(open) => {
+              if (!open) setResponsiveIndex(null);
+            }}
+          >
+            <DialogContent className="sm:max-w-lg">
+              <DialogHeader>
+                <DialogTitle>{t("responsive.title")}</DialogTitle>
+              </DialogHeader>
+              {responsiveIndex !== null && converted[responsiveIndex] && (
+                <ResponsiveGenerator
+                  imageSrc={converted[responsiveIndex].image_data}
+                  imageName={converted[responsiveIndex].image_name}
+                  onDownload={(generated) => {
+                    generateZip(
+                      generated.map((img) => ({
+                        image_name: img.name,
+                        image_data: img.data,
+                      }))
+                    );
+                    toast.success(t("toast.downloadComplete"));
+                  }}
+                />
+              )}
+            </DialogContent>
+          </Dialog>
 
           {/* Preview Modal */}
           {previewIndex !== null && (

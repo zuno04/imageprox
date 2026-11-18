@@ -14,7 +14,7 @@ export default defineConfig({
     tsconfigPaths(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["vite.svg"],
+      includeAssets: ["vite.svg", "icons/*.png", "og.png"],
       manifest: {
         name: "ImageProx - Image Optimizer",
         short_name: "ImageProx",
@@ -24,18 +24,35 @@ export default defineConfig({
         background_color: "#1a1a2e",
         display: "standalone",
         scope: "/",
+        // A stable id keeps the installed app's identity when start_url changes.
+        id: "/",
         start_url: "/",
         icons: [
           {
-            src: "/vite.svg",
-            sizes: "any",
-            type: "image/svg+xml",
+            src: "/icons/icon-192.png",
+            sizes: "192x192",
+            type: "image/png",
             purpose: "any",
+          },
+          {
+            src: "/icons/icon-512.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "any",
+          },
+          {
+            src: "/icons/maskable-512.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "maskable",
           },
         ],
       },
       workbox: {
         globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
+        // The HEIC decoder is ~1.3MB and only needed when a HEIC is uploaded,
+        // so keep it out of the precache and let it load on demand.
+        globIgnores: ["**/heic2any-*.js"],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
@@ -55,6 +72,12 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",
+    // jsdom only exposes localStorage for a real origin; about:blank is opaque.
+    environmentOptions: {
+      jsdom: {
+        url: "http://localhost:3000",
+      },
+    },
     setupFiles: "./src/setupTests.ts",
     coverage: {
       provider: "v8",

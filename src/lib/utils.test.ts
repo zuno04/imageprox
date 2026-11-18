@@ -1,133 +1,54 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { saveToLocalStorage, loadFromLocalStorage } from "./utils";
 
-// Simple localStorage mock for testing environment if needed
-const mockLocalStorage = (() => {
-  let store: { [key: string]: string } = {};
-  return {
-    getItem: (key: string) => store[key] || null,
-    setItem: (key: string, value: string) => {
-      store[key] = value.toString();
-    },
-    removeItem: (key: string) => {
-      delete store[key];
-    },
-    clear: () => {
-      store = {};
-    },
-  };
-})();
-
-// Assign the mock to global localStorage if in a non-browser-like environment
-// In many modern test runners (like Vitest/Jest with jsdom), actual localStorage might be available or mocked.
-// If the worker's environment doesn't have it, this mock is crucial.
-// For now, assume worker might need it, or can adapt if localStorage is present.
-if (typeof localStorage === "undefined") {
-  global.localStorage = mockLocalStorage as Storage;
-}
-
-const runTests = () => {
-  console.log("Running localStorage utility tests...");
-  let testsPassed = 0;
-  let testsFailed = 0;
-
-  const test = (description: string, testFn: () => void) => {
-    try {
-      testFn();
-      console.log(`✅ PASSED: ${description}`);
-      testsPassed++;
-    } catch (e: unknown) {
-      const errorMessage = e instanceof Error ? e.message : String(e);
-      console.error(`❌ FAILED: ${description}`, errorMessage);
-      testsFailed++;
-    }
-  };
-
-  // Before each logical test group, clear mock localStorage if using it
-  localStorage.clear();
-
-  test("should save and load a string", () => {
-    const key = "testString";
-    const value = "hello world";
-    saveToLocalStorage(key, value);
-    const loaded = loadFromLocalStorage<string>(key);
-    console.assert(loaded === value, `Expected "${value}", got "${loaded}"`);
+describe("localStorage helpers", () => {
+  beforeEach(() => {
+    localStorage.clear();
+    vi.restoreAllMocks();
   });
 
-  test("should save and load a number", () => {
-    const key = "testNumber";
-    const value = 123;
-    saveToLocalStorage(key, value);
-    const loaded = loadFromLocalStorage<number>(key);
-    console.assert(loaded === value, `Expected ${value}, got ${loaded}`);
+  it("saves and loads a string", () => {
+    saveToLocalStorage("testString", "hello world");
+    expect(loadFromLocalStorage<string>("testString")).toBe("hello world");
   });
 
-  test("should save and load a boolean", () => {
-    const key = "testBoolean";
-    const value = true;
-    saveToLocalStorage(key, value);
-    const loaded = loadFromLocalStorage<boolean>(key);
-    console.assert(loaded === value, `Expected ${value}, got ${loaded}`);
+  it("saves and loads a number", () => {
+    saveToLocalStorage("testNumber", 123);
+    expect(loadFromLocalStorage<number>("testNumber")).toBe(123);
   });
 
-  test("should save and load an object", () => {
-    const key = "testObject";
+  it("saves and loads a boolean", () => {
+    saveToLocalStorage("testBoolean", true);
+    expect(loadFromLocalStorage<boolean>("testBoolean")).toBe(true);
+  });
+
+  it("saves and loads an object", () => {
     const value = { name: "Jules", type: "agent" };
-    saveToLocalStorage(key, value);
-    const loaded = loadFromLocalStorage<{ name: string; type: string }>(key);
-    console.assert(
-      loaded !== null &&
-        loaded.name === value.name &&
-        loaded.type === value.type,
-      `Object mismatch`
-    );
+    saveToLocalStorage("testObject", value);
+    expect(loadFromLocalStorage<typeof value>("testObject")).toEqual(value);
   });
 
-  test("should return null for a non-existent key", () => {
-    const loaded = loadFromLocalStorage<string>("nonExistentKey");
-    console.assert(loaded === null, `Expected null, got "${loaded}"`);
+  it("returns null for a key that was never written", () => {
+    expect(loadFromLocalStorage<string>("nonExistentKey")).toBeNull();
   });
 
-  localStorage.clear(); // Clear for next test
+  it("returns null and logs when the stored value is malformed JSON", () => {
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+    localStorage.setItem("malformedJson", "{ not: json }");
 
-  test("should return null and log error for malformed JSON", () => {
-    const key = "malformedJson";
-    localStorage.setItem(key, "{ not: json }"); // Manually set malformed JSON
-
-    // Suppress console.error for this specific test if possible, or check if it was called
-    const originalConsoleError = console.error;
-    let errorLogged = false;
-    console.error = (...args) => {
-      errorLogged = true;
-      originalConsoleError(...args);
-    };
-
-    const loaded = loadFromLocalStorage<unknown>(key);
-    console.assert(
-      loaded === null,
-      `Expected null for malformed JSON, got ${typeof loaded}`
-    );
-    console.assert(errorLogged, "Error was not logged for malformed JSON");
-
-    console.error = originalConsoleError; // Restore console.error
+    expect(loadFromLocalStorage<unknown>("malformedJson")).toBeNull();
+    expect(consoleError).toHaveBeenCalled();
   });
 
-  localStorage.clear();
+  it("logs and does not throw when saving fails", () => {
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+    const setItem = vi.spyOn(localStorage, "setItem").mockImplementation(() => {
+      throw new Error("quota exceeded");
+    });
 
-  console.log("--------------------");
-  console.log(
-    `Tests Completed. Passed: ${testsPassed}, Failed: ${testsFailed}`
-  );
-  if (testsFailed > 0) {
-    //   throw new Error(`${testsFailed} tests failed!`); // Optionally throw to indicate failure clearly
-  }
-};
+    expect(() => saveToLocalStorage("key", "value")).not.toThrow();
+    expect(consoleError).toHaveBeenCalled();
 
-// To actually run the tests (e.g., if this file were executed with node or ts-node)
-// For the worker, it will just create the file. Execution might be separate.
-runTests();
-// We can add a small export or a comment to indicate how to run them.
-// export { runTests }; // Or just have the worker confirm file creation.
-
-console.log(
-  "utils.test.ts created. To run tests, import and call runTests() or use a test runner."
-);
+    setItem.mockRestore();
+  });
+});
